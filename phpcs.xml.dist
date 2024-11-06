@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="OomPlugin" xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+    <description>Factorio Update coding standard.</description>
+
+    <file>factorio_update.php</file>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg name="parallel" value="75"/>
+    <arg value="np"/>
+
+    <rule ref="PEAR">
+        <exclude name="PEAR.NamingConventions.ValidFunctionName.PrivateNoUnderscore" />
+        <exclude name="PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps" />
+        <exclude name="PEAR.Commenting.ClassComment.MissingCategoryTag" />
+        <exclude name="PEAR.Commenting.ClassComment.MissingPackageTag" />
+        <exclude name="PEAR.Commenting.ClassComment.MissingAuthorTag" />
+        <exclude name="PEAR.Commenting.ClassComment.MissingLicenseTag" />
+        <exclude name="PEAR.Commenting.ClassComment.MissingLinkTag" />
+        <exclude name="PEAR.NamingConventions.ValidVariableName.PrivateNoUnderscore" />
+        <exclude name="PEAR.Classes.ClassDeclaration.OpenBraceNewLine" />
+        <exclude name="PEAR.Functions.FunctionDeclaration.BraceOnSameLine" />
+    </rule>
+
+    
+
+</ruleset>

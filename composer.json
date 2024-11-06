@@ -1,0 +1,23 @@
+{
+    "name": "tommander/factorio-updater",
+    "type": "library",
+    "require-dev": {
+        "vimeo/psalm": "^5.26",
+        "squizlabs/php_codesniffer": "^3.10"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "tommander",
+            "email": "tomas.rajnoha@proton.me"
+        }
+    ],
+    "scripts": {
+        "phpcs": "phpcs",
+        "psalm": "psalm --show-info=true --no-file-cache --no-reflection-cache --no-cache",
+        "qa": [
+            "@phpcs",
+            "@psalm"
+        ]
+    }
+}
