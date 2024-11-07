@@ -1,5 +1,6 @@
 {
     "name": "tommander/factorio-updater",
+    "description": "Update script for Factorio",
     "type": "library",
     "require-dev": {
         "vimeo/psalm": "^5.26",
