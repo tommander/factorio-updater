@@ -1,0 +1,14 @@
+{
+    "experimental": {
+        "alpha": "1.1.1",
+        "demo": "1.1.1",
+        "expansion": "1.1.1",
+        "headless": "1.1.1"
+    },
+    "stable": {
+        "alpha": "1.1.0",
+        "demo": "1.1.0",
+        "expansion": "1.1.0",
+        "headless": "1.1.0"
+    }
+}

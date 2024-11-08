@@ -1,10 +1,12 @@
 {
     "name": "tommander/factorio-updater",
-    "description": "Update script for Factorio",
+    "description": "A simple update script for Factorio headless servers.",
     "type": "library",
     "require-dev": {
         "vimeo/psalm": "^5.26",
-        "squizlabs/php_codesniffer": "^3.10"
+        "squizlabs/php_codesniffer": "^3.10",
+        "phpunit/phpunit": "^10",
+        "phpcompatibility/php-compatibility": "^9.3"
     },
     "license": "MIT",
     "authors": [
@@ -14,16 +16,30 @@
         }
     ],
     "scripts": {
+        "selfcheck": "composer validate --strict",
         "phpcs": "phpcs",
         "psalm": "psalm --show-info=true --no-file-cache --no-reflection-cache --no-cache",
+        "phpunit": "phpunit",
+        "dryrun": "./fupd.php --test",
         "qa": [
             "@phpcs",
-            "@psalm"
+            "@psalm",
+            "@phpunit",
+            "@dryrun"
         ]
     },
     "config": {
         "platform": {
             "php": "8.2"
         }
+    },
+    "autoload": {
+        "psr-4": {
+            "TMD\\FUPD\\": "src",
+            "TMD\\FUPD\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
     }
 }
