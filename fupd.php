@@ -45,7 +45,7 @@ function runtest(): int
                     __DIR__ . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, ['tests', 'assets', 'factoriomock_1.0.0']),
                     __DIR__ . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, ['tests', 'factroot', 'bin', 'x64', 'version'])
                 );
-                $faup = new FactorioUpdate($test_package, $test_build, $test_stable, $test_rootdir, $test_username, $test_token, true);
+                $faup = new FactorioUpdate($test_package, $test_build, $test_stable, $test_rootdir, $test_username, $test_token, true, false);
                 $res = $faup->run();
                 if ($res !== $test_expectation) {
                     FactorioHelper::error('Test failed.');
@@ -54,16 +54,24 @@ function runtest(): int
             }
         }
     }
+    FactorioHelper::info('All tests were successful.');
     return 0;
 }
 
 // Load options and .env variables
-$opt = getopt('', ['test', 'package:', 'build:', 'stable:', 'rootdir:']);
+$opt = getopt('', ['test', 'quiet', 'no-install', 'package:', 'build:', 'stable:', 'rootdir:']);
+
+if (array_key_exists('quiet', $opt)) {
+    FactorioHelper::$quiet = true;
+}
+
+$opt_noinstall = array_key_exists('no-install', $opt);
 
 // Option "test"
 if (array_key_exists('test', $opt)) {
     exit(runtest());
 }
+
 
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -113,7 +121,7 @@ $opt_username = trim($_ENV['FA_USERNAME']);
 $opt_token = trim($_ENV['FA_TOKEN']);
 
 // Run
-$faup = new TMD\FUPD\FactorioUpdate($opt_package, $opt_build, $opt_stable, $opt_rootdir, $opt_username, $opt_token, false);
+$faup = new TMD\FUPD\FactorioUpdate($opt_package, $opt_build, $opt_stable, $opt_rootdir, $opt_username, $opt_token, false, $opt_noinstall);
 $res = $faup->run();
 if ($res !== true) {
     exit(1);

@@ -32,6 +32,7 @@ class FactorioUpdate
     private string $opt_username = '';
     private string $opt_token = '';
     private bool $opt_test = false;
+    private bool $opt_noinstall = false;
 
     /**
      * Constructor.
@@ -46,7 +47,7 @@ class FactorioUpdate
      *
      * @throws \Exception When things go wrong.
      */
-    public function __construct(FactorioPackage $package, FactorioBuild $build, FactorioStable $stable, string $rootdir, string $username, string $token, bool $test)
+    public function __construct(FactorioPackage $package, FactorioBuild $build, FactorioStable $stable, string $rootdir, string $username, string $token, bool $test, bool $noinstall)
     {
         $this->opt_package = $package;
         $this->opt_build = $build;
@@ -55,6 +56,7 @@ class FactorioUpdate
         $this->opt_username = $username;
         $this->opt_token = $token;
         $this->opt_test = $test;
+        $this->opt_noinstall = $noinstall;
         if ($this->checkParams() !== true) {
             throw new \Exception('Oops');
         }
@@ -417,6 +419,11 @@ class FactorioUpdate
         // Versions are the same => all good!
         if ($latest_version === $local_version) {
             FactorioHelper::info('Local version is the latest one.');
+            return true;
+        }
+
+        if ($this->opt_noinstall) {
+            FactorioHelper::info('Found a new version, but no-install requested => all done.');
             return true;
         }
 

@@ -1,6 +1,7 @@
 {
     "name": "tommander/factorio-updater",
     "description": "A simple update script for Factorio headless servers.",
+    "version": "1.0.0",
     "type": "library",
     "require-dev": {
         "vimeo/psalm": "^5.26",
@@ -11,27 +12,29 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "tommander",
-            "email": "tomas.rajnoha@proton.me"
+            "name": "Tomáš Rajnoha",
+            "email": "tomas.rajnoha@proton.me",
+            "homepage": "https://tommander.cz"
         }
     ],
+    "support": {
+        "email": "tomas.rajnoha@proton.me",
+        "issues": "https://github.com/tommander/factorio-updater/issues",
+        "wiki": "https://github.com/tommander/factorio-updater/wiki",
+        "source": "https://github.com/tommander/factorio-updater"
+    },
     "scripts": {
         "selfcheck": "composer validate --strict",
         "phpcs": "phpcs",
         "psalm": "psalm --show-info=true --no-file-cache --no-reflection-cache --no-cache",
         "phpunit": "phpunit",
-        "dryrun": "./fupd.php --test",
+        "dryrun": "./fupd.php --test --quiet",
         "qa": [
             "@phpcs",
             "@psalm",
             "@phpunit",
             "@dryrun"
         ]
-    },
-    "config": {
-        "platform": {
-            "php": "8.2"
-        }
     },
     "autoload": {
         "psr-4": {
