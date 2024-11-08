@@ -1,7 +1,6 @@
 {
     "name": "tommander/factorio-updater",
     "description": "A simple update script for Factorio headless servers.",
-    "version": "1.0.0",
     "type": "library",
     "require-dev": {
         "vimeo/psalm": "^5.26",
