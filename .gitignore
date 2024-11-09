@@ -1,3 +1,7 @@
 vendor/
 .env
 .phpunit.result.cache
+docs/build
+docs/source/api/*.rst
+docs/source/api/*.json
+docs/source/api/**/
