@@ -10,6 +10,6 @@ Tech stack for development:
 
 - Text editor
 - PHP-cli 7.4+ (development is currently done on PHP 8.2; no special requirement for extensions)
-- Composer 2.2+ (lower versions do not support the PHP superglobal for autoloader path -> you might have an issue with running the binary via ``composer run-script``)
+- Composer
 - git
 - python3 + python-sphinx + python3-sphinx-rtd-theme (for the documentation)

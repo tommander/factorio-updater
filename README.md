@@ -6,9 +6,12 @@ A simple PHP script that checks the local Factorio version and compares it with 
 
 It uses the [Factorio Download API](https://wiki.factorio.com/Download_API).
 
+Please note that this script is in no way sanctioned by or associated with Wube Software.
+
 ## Requirements
 
-- Factorio
+- Linux x64
+- Factorio (headless)
 - PHP 7.4+
 - Composer
 
@@ -19,6 +22,12 @@ cd /some/folder
 git clone https://github.com/tommander/factorio-updater
 cd factorio-updater
 composer install
+```
+
+If you do not intend to do some development or tests, you can run the last command like this:
+
+```sh
+composer install --no-dev
 ```
 
 ## Usage
@@ -38,40 +47,23 @@ If the last line printed by the program is `[INFO] All tests were successful.`, 
 
 Then you can run:
 
-`/some/folder/factorio-updater/fupd.php --package="core-linux_headless64" --build="headless" --stable="stable" --rootdir="/some/folder/factorio"`
+`/some/folder/factorio-updater/fupd.php --stable="stable" --rootdir="/some/folder/factorio"`
 
 ### Parameters
 
-```
---package     Required. One of:
-              core-linux32, core-linux64, core-linux_headless64,
-              core-mac, core-mac-arm64, core-mac-x64, core-win32,
-              core-win64, core_expansion-linux64,
-              core_expansion-mac, core_expansion-win64
---build       Required. One of:
-              alpha, demo, expansion, headless
---stable      Required. One of:
-              stable, experimental
---rootdir     Required. Absolute path to the root folder of
-              a Factorio installation.
---no-install  Optional. Do not download/install updates if
-              a newer version exists.
---test        Optional. Indicates a test run that does not use
-              actual Factorio installation or API, rather it
-              uses mocks in the test folder for API responses,
-              Factorio binary and update packages. This checks
-              that the script behaves as expected regarding the
-              API calls and putting together + applying the
-              update sequence with checking the output of the
-              program.
-              Using this option ignores --package, --build,
-              --stable, --rootdir and --no-install options.
---quiet       Optional. "Do not print anything, just do your job."
-```
+| Parameter | Required? | Description |
+| --- | --- | --- |
+| `--stable=<stable>` | Yes* | Either "stable" or "experimental" |
+| `--rootdir=<path>` | Yes* | Absolute path to the root folder of a Factorio installation. |
+| `--no-install` | No | Do not download/install updates if a newer version exists. |
+| `--test` | No | Indicates a test run that does not use actual Factorio installation or API, rather it uses mocks in the `tests` folder for API responses, Factorio binary and update packages. This checks that the script behaves as expected regarding the API calls and putting together + applying the update sequence with checking the output of the program. Using this option ignores `--stable`, `--rootdir` and `--no-install` options. |
+| `--quiet` | No | "Do not print anything, just do your job." |
+
+\*) Required only if `--test` is *not* present.
 
 ## Documentation
 
-*under construction*
+Under construction, but you can check the "docs" folder in the meantime.
 
 ## QA
 
@@ -86,4 +78,4 @@ This script runs on pushes/PRs to the "main" branch.
 
 ## License
 
-See [LICENSE](LICENSE).
+[MIT License](LICENSE).

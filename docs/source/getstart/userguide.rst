@@ -26,10 +26,8 @@ Way 2 - normal operation
 ------------------------
 To invoke the actual check of new versions and optionally updating is with four options.
 
-1. ``--package`` with one of these values: ``core-linux32``, ``core-linux64``, ``core-linux_headless64``, ``core-mac``, ``core-mac-arm64``, ``core-mac-x64``, ``core-win32``, ``core-win64``, ``core_expansion-linux64``, ``core_expansion-mac``, ``core_expansion-win64``.
-2. ``--build`` with one of these values: ``alpha``, ``demo``, ``expansion``, ``headless``.
-3. ``--stable`` with either ``stable`` or ``experimental``.
-4. ``--rootdir`` with an absolute path to the root folder of a Factorio installation. Must end with \/ or \\.
+1. ``--stable`` with either ``stable`` or ``experimental``.
+2. ``--rootdir`` with an absolute path to the root folder of a Factorio installation. Must end with \/ or \\.
 
 Then you have two optional parameters:
 
@@ -41,12 +39,12 @@ So you can call the script e.g. like this (given that your current working direc
 .. code:: sh
 
    # Check and update
-   ./fupd.php --package="core-linux_headless64" --build="headless" --stable="stable" --rootdir="/home/user/factorio"
+   ./fupd.php --stable="stable" --rootdir="/home/user/factorio"
    # Only check
-   ./fupd.php --package="core-linux_headless64" --build="headless" --stable="stable" --rootdir="/home/user/factorio" --no-install
+   ./fupd.php --stable="stable" --rootdir="/home/user/factorio" --no-install
    # Check and update, no "talking"
-   ./fupd.php --package="core-linux_headless64" --build="headless" --stable="stable" --rootdir="/home/user/factorio" --quiet
+   ./fupd.php --stable="stable" --rootdir="/home/user/factorio" --quiet
    # Only check, no "talking"
-   ./fupd.php --package="core-linux_headless64" --build="headless" --stable="stable" --rootdir="/home/user/factorio" --no-install --quiet
+   ./fupd.php --stable="stable" --rootdir="/home/user/factorio" --no-install --quiet
 
 At least at the beginning (after installation of this script), it is recommended not to use the ``--quiet`` option, so the script can tell you if there's an issue. This option makes more sense when used in some automated solutions which can respond to the exit code of the script.

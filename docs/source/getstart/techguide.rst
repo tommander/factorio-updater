@@ -10,13 +10,6 @@ Here are the options:
 
 .. code:: sh
 
-   --package     Required. One of:
-                 core-linux32, core-linux64, core-linux_headless64,
-                 core-mac, core-mac-arm64, core-mac-x64, core-win32,
-                 core-win64, core_expansion-linux64,
-                 core_expansion-mac, core_expansion-win64
-   --build       Required. One of:
-                 alpha, demo, expansion, headless
    --stable      Required. One of:
                  stable, experimental
    --rootdir     Required. Absolute path to the root folder of
@@ -43,7 +36,7 @@ The ``--quiet`` option is good for automation scripts which basically need just 
 
 Self-test uses a mock Factorio binary ``tests/factroot/bin/x64/factorio`` and mock Factorio API ``tests/assets/*.json`` to just test that the scripts behaves as expected.
 
-What it does is that for all combinations of packages (``core-linux32``, ``core-win32``, ...), build (``alpha``, ``demo``, ...) and stability (``stable``, ``experimental``) it tries to update the mock Factorio installation in ``tests/factroot`` from version "1.0.0" to the newest version ("1.1.0" for stable, "1.1.1" for experimental).
+What it does is that for all combinations of stability (currently ``stable`` and ``experimental``) it tries to update the mock Factorio installation in ``tests/factroot`` from version "1.0.0" to the newest version ("1.1.0" for stable, "1.1.1" for experimental).
 
 The mock Factorio API, represented by JSON files in ``tests/asssets``, has the same format and structure as the normal API. It reports hardcoded versions "1.0.0", "1.0.1", "1.1.0" and "1.1.1". There are also update packages in the same folder "1.0.0->1.0.1", "1.0.1->1.1.0" and "1.1.0->1.1.1" that the script can download and apply.
 
@@ -57,11 +50,9 @@ Case 2 - normal operation
 -------------------------
 If the option ``--test`` is *not* present, the options above marked as "Required" really must be present, because they give the script all necessary information for downloading correct updates.
 
-So when the ``fupd.php`` parses all options and does a low-level check of these options, it creates a new instance of the class :php:class:`TMD\\FUPD\\FactorioUpdate`, handing over all parsed options, and calls its method :php:meth:`TMD\\FUPD\\FactorioUpdate::run`.
+The file ``fupd.php`` really just creates a new instance of the class :php:class:`TMD\\FUPD\\FactorioUpdate` (specifically, it calls its method :php:meth:`TMD\\FUPD\\FactorioUpdate::run`). All the actual code is present in that class.
 
-Basically, all the important code is present in that class. The other files just contain some enums and helper functions.
-
-The constructor of that class does additional checks of the option values given to it, so it won't continue if e.g. the Factorio root directory is not writable for the script.
+The method does all the checks of the option values given to it, so it won't continue if e.g. the Factorio root directory is not writable for the script.
 
 If all options seem fine, it first downloads the list of latest releases (API) and compares it with the version that Factorio binary reports with ``--version``. If the version strings are the same, all is fine and the script exits.
 

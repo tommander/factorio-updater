@@ -47,7 +47,7 @@ Move to the newly created folder.
 
 Step 4 - Install Dependencies
 -----------------------------
-Install dependencies needed for the app to run. If you do not plan to contribute to our project, you might want to use the second leave out the dev dependencies.
+Install dependencies needed for the app to run. If you do not plan to contribute to our project, you might want to use the second to leave out the dev dependencies.
 
 .. code:: sh
 
