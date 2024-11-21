@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace TMD\FUPD;
 
+use Dotenv\Dotenv;
+
 /**
  * This is the class that implements the whole functionality of the script.
  */
@@ -24,42 +26,85 @@ class FactorioUpdate
     private const FMT_VERSION = '/^\d+\.\d+\.\d+$/';
     private const FMT_USERNAME = '/^[A-Za-z0-9_-]+$/';
     private const FMT_TOKEN = '/^[0-9a-f]{30}$/';
+    private const OPT_PACKAGE = 'core-linux_headless64';
+    private const OPT_BUILD = 'headless';
 
-    private FactorioPackage $opt_package = FactorioPackage::CoreLinuxHeadless64;
-    private FactorioBuild $opt_build = FactorioBuild::Headless;
-    private FactorioStable $opt_stable = FactorioStable::Stable;
-    private string $opt_rootdir = '/';
+    private string $opt_stable = '';
+    private string $opt_rootdir = '';
     private string $opt_username = '';
     private string $opt_token = '';
+    private bool $opt_quiet = false;
     private bool $opt_test = false;
     private bool $opt_noinstall = false;
 
     /**
-     * Constructor.
+     * Error.
      *
-     * @param FactorioPackage $package  Package.
-     * @param FactorioBuild   $build    Build.
-     * @param FactorioStable  $stable   Stable.
-     * @param string          $rootdir  Rootdir.
-     * @param string          $username Username.
-     * @param string          $token    Token.
-     * @param bool            $test     Test?
+     * @param string $message Error message.
      *
-     * @throws \Exception When things go wrong.
+     * @return void
      */
-    public function __construct(FactorioPackage $package, FactorioBuild $build, FactorioStable $stable, string $rootdir, string $username, string $token, bool $test, bool $noinstall)
+    private function error(string $message): void
     {
-        $this->opt_package = $package;
-        $this->opt_build = $build;
-        $this->opt_stable = $stable;
-        $this->opt_rootdir = $rootdir;
-        $this->opt_username = $username;
-        $this->opt_token = $token;
-        $this->opt_test = $test;
-        $this->opt_noinstall = $noinstall;
-        if ($this->checkParams() !== true) {
-            throw new \Exception('Oops');
+        if ($this->opt_quiet) {
+            return;
         }
+        echo '[ERROR] ' . $message . PHP_EOL;
+    }
+
+    /**
+     * Info.
+     *
+     * @param string $message Info message.
+     *
+     * @return void
+     */
+    private function info(string $message): void
+    {
+        if ($this->opt_quiet) {
+            return;
+        }
+        echo '[INFO] ' . $message . PHP_EOL;
+    }
+
+    private function loadOptions(): bool
+    {
+        // Load options and .env variables
+        $opt = getopt('', ['test', 'quiet', 'no-install', 'stable:', 'rootdir:']);
+
+        // Options "quiet"
+        $this->opt_quiet = array_key_exists('quiet', $opt);
+
+        // Option "test"
+        $this->opt_test = array_key_exists('test', $opt);
+        if ($this->opt_test) {
+            return true;
+        }
+
+        // Options "no-install"
+        $this->opt_noinstall = array_key_exists('no-install', $opt);
+
+        // Option "stable"
+        if (!array_key_exists('stable', $opt) || !is_string($opt['stable'])) {
+            !$this->opt_quiet && print('Missing --stable option.');
+            return false;
+        }
+        $this->opt_stable = trim($opt['stable']);
+
+        // Option "rootdir"
+        if (!array_key_exists('rootdir', $opt) || !is_string($opt['rootdir'])) {
+            !$this->opt_quiet && print('Missing --rootdir option.');
+            return false;
+        }
+        $this->opt_rootdir = trim($opt['rootdir']);
+
+        // Environment variables
+        $dotenv = Dotenv::createImmutable(__DIR__);
+        $dotenv->load();
+        $this->opt_username = trim($_ENV['FA_USERNAME']);
+        $this->opt_token = trim($_ENV['FA_TOKEN']);
+
+        return true;
     }
 
     /**
@@ -87,11 +132,11 @@ class FactorioUpdate
     private function validateString(mixed $something, string $regex): string|false
     {
         if (!is_string($something)) {
-            FactorioHelper::error(json_encode($something) . ' is not a string.');
+            $this->error(json_encode($something) . ' is not a string.');
             return false;
         }
         if (preg_match($regex, $something) !== 1) {
-            FactorioHelper::error(json_encode($something) . ' is not a valid string based on "' . $regex . '".');
+            $this->error(json_encode($something) . ' is not a valid string based on "' . $regex . '".');
             return false;
         }
         return $something;
@@ -109,35 +154,40 @@ class FactorioUpdate
     private function validateRootdir(): bool
     {
         if (!is_dir($this->opt_rootdir)) {
-            FactorioHelper::error("Rootdir \"{$this->opt_rootdir}\" not a dir.");
+            $this->error("Rootdir \"{$this->opt_rootdir}\" not a dir.");
             return false;
         }
         if (!file_exists($this->opt_rootdir)) {
-            FactorioHelper::error("Rootdir \"{$this->opt_rootdir}\" does not exist.");
+            $this->error("Rootdir \"{$this->opt_rootdir}\" does not exist.");
             return false;
         }
         if (!is_readable($this->opt_rootdir)) {
-            FactorioHelper::error("Rootdir \"{$this->opt_rootdir}\" not readable.");
+            $this->error("Rootdir \"{$this->opt_rootdir}\" not readable.");
             return false;
         }
         if (!is_writable($this->opt_rootdir)) {
-            FactorioHelper::error("Rootdir \"{$this->opt_rootdir}\" not writable.");
+            $this->error("Rootdir \"{$this->opt_rootdir}\" not writable.");
             return false;
         }
         if (!str_ends_with($this->opt_rootdir, DIRECTORY_SEPARATOR)) {
-            FactorioHelper::error("Rootdir \"{$this->opt_rootdir}\" does not end with \"" . DIRECTORY_SEPARATOR . "\".");
+            $this->error("Rootdir \"{$this->opt_rootdir}\" does not end with \"" . DIRECTORY_SEPARATOR . "\".");
             return false;
         }
         $factorioExec = $this->factorioExec($this->opt_rootdir);
         if (!file_exists($factorioExec)) {
-            FactorioHelper::error("Executable file \"{$factorioExec}\" does not exist.");
+            $this->error("Executable file \"{$factorioExec}\" does not exist.");
             return false;
         }
         if (!is_executable($factorioExec)) {
-            FactorioHelper::error("Executable file \"{$factorioExec}\" is not executable.");
+            $this->error("Executable file \"{$factorioExec}\" is not executable.");
             return false;
         }
         return true;
+    }
+
+    private function validateStable(string $something): string|false
+    {
+        return (in_array($something, ['stable', 'experimental'], true)) ? $something : false;
     }
 
     /**
@@ -147,21 +197,27 @@ class FactorioUpdate
      */
     private function checkParams(): bool
     {
+        $valid_stable = $this->validateStable($this->opt_stable);
+        if ($valid_stable === false) {
+            $this->error("Option stable has an invalid value \"{$this->opt_stable}\".");
+            return false;
+        }
+
         $valid_rootdir = $this->validateRootdir();
         if ($valid_rootdir === false) {
-            FactorioHelper::error("Option rootdir has an invalid value \"{$this->opt_rootdir}\".");
+            $this->error("Option rootdir has an invalid value \"{$this->opt_rootdir}\".");
             return false;
         }
 
         $temp_opt_username = $this->validateString($this->opt_username, self::FMT_USERNAME);
         if ($temp_opt_username === false) {
-            FactorioHelper::error("Option FA_USERNAME has an invalid value \"{$this->opt_username}\".");
+            $this->error("Option FA_USERNAME has an invalid value \"{$this->opt_username}\".");
             return false;
         }
 
         $temp_opt_token = $this->validateString($this->opt_token, self::FMT_TOKEN);
         if ($temp_opt_token === false) {
-            FactorioHelper::error("Option FA_TOKEN has an invalid value \"{$this->opt_token}\".");
+            $this->error("Option FA_TOKEN has an invalid value \"{$this->opt_token}\".");
             return false;
         }
 
@@ -182,7 +238,7 @@ class FactorioUpdate
     {
         $str = \file_get_contents($url);
         if (!is_string($str)) {
-            FactorioHelper::error('Cannot fetch JSON from "' . $url . '".');
+            $this->error('Cannot fetch JSON from "' . $url . '".');
             return false;
         }
 
@@ -193,7 +249,7 @@ class FactorioUpdate
          */
         $jsn = json_decode($str, true);
         if (!is_array($jsn) || json_last_error() !== JSON_ERROR_NONE) {
-            FactorioHelper::error('Cannot parse JSON downloaded from "' . $url . '".' . PHP_EOL . '<something>' . PHP_EOL . $str . PHP_EOL . '</something>');
+            $this->error('Cannot parse JSON downloaded from "' . $url . '".' . PHP_EOL . '<something>' . PHP_EOL . $str . PHP_EOL . '</something>');
             return false;
         }
 
@@ -213,23 +269,23 @@ class FactorioUpdate
         $url_latest = $this->opt_test ? self::URL_LATEST_TEST : self::URL_LATEST;
         $json_latest = $this->downloadJson($url_latest);
         if (!is_array($json_latest)) {
-            FactorioHelper::error(json_encode($json_latest) . ' is not an array.');
+            $this->error(json_encode($json_latest) . ' is not an array.');
             return false;
         }
-        if (!array_key_exists($this->opt_stable->value, $json_latest)) {
-            FactorioHelper::error(json_encode($json_latest) . ' does not contain the key "' . $this->opt_stable->value . '".');
+        if (!array_key_exists($this->opt_stable, $json_latest)) {
+            $this->error(json_encode($json_latest) . ' does not contain the key "' . $this->opt_stable . '".');
             return false;
         }
-        if (!is_array($json_latest[$this->opt_stable->value])) {
-            FactorioHelper::error(json_encode($json_latest) . ' key "' . $this->opt_stable->value . '" is not an array.');
+        if (!is_array($json_latest[$this->opt_stable])) {
+            $this->error(json_encode($json_latest) . ' key "' . $this->opt_stable . '" is not an array.');
             return false;
         }
-        if (!array_key_exists($this->opt_build->value, $json_latest[$this->opt_stable->value])) {
-            FactorioHelper::error(json_encode($json_latest) . ' key "' . $this->opt_stable->value . '" does not contain the key "' . $this->opt_build->value . '".');
+        if (!array_key_exists((string)static::OPT_BUILD, $json_latest[$this->opt_stable])) {
+            $this->error(json_encode($json_latest) . ' key "' . $this->opt_stable . '" does not contain the key "' . (string)static::OPT_BUILD . '".');
             return false;
         }
 
-        return $this->validateString($json_latest[$this->opt_stable->value][$this->opt_build->value], self::FMT_VERSION);
+        return $this->validateString($json_latest[$this->opt_stable][(string)static::OPT_BUILD], self::FMT_VERSION);
     }
 
     /**
@@ -237,24 +293,39 @@ class FactorioUpdate
      *
      * Run factorio with "--version" and extract and return its version.
      *
-     * @return string|false Local version on success, false otherwise.
+     * @return array{version: string|false, buildno: string, distro: string, build: string}|false Local version on success, false otherwise.
      */
-    private function getLocalVersion(): string|false
+    private function getLocalVersion(): array|false
     {
         $fx = $this->factorioExec();
         exec("{$fx} --version", $local_output_arr);
         $local_output = trim(implode(PHP_EOL, $local_output_arr));
-        if (preg_match('/^Version:\s(\d+\.\d+\.\d+)\s\(/', $local_output, $str_latest_m) !== 1) {
-            FactorioHelper::error('The output of the program does not contain a version string.' . PHP_EOL . '<output>' . PHP_EOL . $local_output . PHP_EOL . '</output>');
+        if (preg_match('/^Version:\s(\d+\.\d+\.\d+)\s\(build\s(\d+),\s([^,]+),\s([^)]+)\)/', $local_output, $str_latest_m) !== 1) {
+            $this->error('The output of the program does not contain a version string.' . PHP_EOL . '<output>' . PHP_EOL . $local_output . PHP_EOL . '</output>');
             return false;
         }
 
-        if (count($str_latest_m) < 2) {
-            FactorioHelper::error('The output of the program is strange.' . PHP_EOL . '<output>' . PHP_EOL . $local_output . PHP_EOL . '</output>');
+        if (count($str_latest_m) < 5) {
+            $this->error('The output of the program is strange.' . PHP_EOL . '<output>' . PHP_EOL . $local_output . PHP_EOL . '</output>');
             return false;
         }
 
-        return $this->validateString($str_latest_m[1], self::FMT_VERSION);
+        if ($str_latest_m[3] !== 'linux64') {
+            $this->error("Unsupported distro \"$str_latest_m[3]\".");
+            return false;
+        }
+
+        if ($str_latest_m[4] !== 'headless') {
+            $this->error("Unsupported build \"$str_latest_m[4]\".");
+            return false;
+        }
+
+        return [
+            'version' => $this->validateString($str_latest_m[1], self::FMT_VERSION),
+            'buildno' => $str_latest_m[2],
+            'distro' => $str_latest_m[3],
+            'build' => $str_latest_m[4],
+        ];
     }
 
     /**
@@ -277,15 +348,15 @@ class FactorioUpdate
         $url_available = $this->opt_test ? self::URL_AVAILABLE_TEST : self::URL_AVAILABLE;
         $json_available = $this->downloadJson($url_available);
         if (!is_array($json_available)) {
-            FactorioHelper::error(json_encode($json_available) . ' is not an array.');
+            $this->error(json_encode($json_available) . ' is not an array.');
             return false;
         }
-        if (!array_key_exists($this->opt_package->value, $json_available)) {
-            FactorioHelper::error(json_encode($json_available) . ' does not contain the key "' . $this->opt_package->value . '".');
+        if (!array_key_exists((string)static::OPT_PACKAGE, $json_available)) {
+            $this->error(json_encode($json_available) . ' does not contain the key "' . (string)static::OPT_PACKAGE . '".');
             return false;
         }
-        if (!is_array($json_available[$this->opt_package->value])) {
-            FactorioHelper::error(json_encode($json_available) . ' key "' . $this->opt_package->value . '" is not an array.');
+        if (!is_array($json_available[(string)static::OPT_PACKAGE])) {
+            $this->error(json_encode($json_available) . ' key "' . (string)static::OPT_PACKAGE . '" is not an array.');
             return false;
         }
 
@@ -300,7 +371,7 @@ class FactorioUpdate
              *
              * @var array
              */
-            foreach ($json_available[$this->opt_package->value] as $fromto) {
+            foreach ($json_available[(string)static::OPT_PACKAGE] as $fromto) {
                 $from = $this->validateString($fromto['from'] ?? null, self::FMT_VERSION);
                 $to = $this->validateString($fromto['to'] ?? null, self::FMT_VERSION);
                 if (!is_string($from) || !is_string($to)) {
@@ -322,7 +393,7 @@ class FactorioUpdate
         }
 
         if (!$success) {
-            FactorioHelper::error(json_encode($json_available) . ' key "' . $this->opt_package->value . '" does not contain a sequence of updates from "' . $from_version . '" to "' . $to_version . '".');
+            $this->error(json_encode($json_available) . ' key "' . (string)static::OPT_PACKAGE . '" does not contain a sequence of updates from "' . $from_version . '" to "' . $to_version . '".');
             return false;
         }
 
@@ -343,16 +414,16 @@ class FactorioUpdate
         $url_update = $this->opt_test ? self::URL_UPDATE_TEST : self::URL_UPDATE;
         foreach ($sequence as $one_update) {
             // Download update link
-            FactorioHelper::info('Downloading link for "' . $one_update['from'] . '" => "' . $one_update['to'] . '"...');
-            $update_url = sprintf($url_update, $this->opt_username, $this->opt_token, $this->opt_package->value, $one_update['from'], $one_update['to']);
+            $this->info('Downloading link for "' . $one_update['from'] . '" => "' . $one_update['to'] . '"...');
+            $update_url = sprintf($url_update, $this->opt_username, $this->opt_token, (string)static::OPT_PACKAGE, $one_update['from'], $one_update['to']);
             $update_link_json = $this->downloadJson($update_url);
             if (!is_array($update_link_json) || count($update_link_json) === 0) {
-                FactorioHelper::error('Update link is not a non-empty array.' . PHP_EOL . json_encode($update_link_json));
+                $this->error('Update link is not a non-empty array.' . PHP_EOL . json_encode($update_link_json));
                 return false;
             }
             $blam = $update_link_json[0];
             if (!is_string($blam)) {
-                FactorioHelper::error('Update link\'s first item is not a string.' . PHP_EOL . json_encode($update_link_json));
+                $this->error('Update link\'s first item is not a string.' . PHP_EOL . json_encode($update_link_json));
                 return false;
             }
             if ($this->opt_test) {
@@ -360,30 +431,30 @@ class FactorioUpdate
             }
             $url_download_prefix = $this->opt_test ? self::URL_DOWNLOAD_PREFIX_TEST : self::URL_DOWNLOAD_PREFIX;
             if (!str_starts_with($blam, $url_download_prefix)) {
-                FactorioHelper::error('Update link\'s first item does not start with "' . $url_download_prefix . '".' . PHP_EOL . $blam);
+                $this->error('Update link\'s first item does not start with "' . $url_download_prefix . '".' . PHP_EOL . $blam);
                 return false;
             }
             $update_bin = file_get_contents($blam);
             if (!is_string($update_bin)) {
-                FactorioHelper::error('The downloaded update binary is not a string.' . PHP_EOL . json_encode($update_bin));
+                $this->error('The downloaded update binary is not a string.' . PHP_EOL . json_encode($update_bin));
                 return false;
             }
 
             // Save update binary
-            FactorioHelper::info('Saving the downloaded update binary...');
+            $this->info('Saving the downloaded update binary...');
             $update_file = sprintf('%supd_%s_%s.zip', $this->opt_rootdir, $one_update['from'], $one_update['to']);
             file_put_contents($update_file, $update_bin);
             if (!file_exists($update_file)) {
-                FactorioHelper::error('Update file "' . $update_file . '" does not exist.');
+                $this->error('Update file "' . $update_file . '" does not exist.');
                 return false;
             }
             $tempFiles[] = $update_file;
 
             // Apply update
-            FactorioHelper::info('Applying update...' . "{$fx} --apply-update {$update_file}");
+            $this->info('Applying update...' . "{$fx} --apply-update {$update_file}");
             exec("{$fx} --apply-update {$update_file}", $update_out, $update_res);
             if ($update_res !== 0) {
-                FactorioHelper::error('Update failed.' . PHP_EOL . '<output>' . PHP_EOL . implode(PHP_EOL, $update_out) . '</output>');
+                $this->error('Update failed.' . PHP_EOL . '<output>' . PHP_EOL . implode(PHP_EOL, $update_out) . '</output>');
                 return false;
             }
         }
@@ -398,42 +469,71 @@ class FactorioUpdate
      */
     public function run(): bool
     {
-        // Find out latest version online
-        $latest_version = $this->getLatestRelease();
-        if (!is_string($latest_version)) {
-            FactorioHelper::error('Cannot get latest release.');
+        $resLoad = $this->loadOptions();
+        if (!$resLoad) {
+            $this->error('Error when loading params.');
             return false;
         }
 
-        FactorioHelper::info("Latest version is \"{$latest_version}\".");
+        if ($this->opt_test) {
+            return ($this->runtest() === 0);
+        }
+
+        return $this->doRun();
+    }
+
+    /**
+     * Do the magic.
+     *
+     * @return bool
+     */
+    private function doRun(): bool
+    {
+        if ($this->checkParams() !== true) {
+            $this->error('Error when checking params.');
+            return false;
+        }
 
         // Find out current local version
         $local_version = $this->getLocalVersion();
-        if (!is_string($local_version)) {
-            FactorioHelper::error('Cannot get local version.');
+        if (!is_array($local_version)) {
+            $this->error('Cannot get local version.');
+            return false;
+        }
+        if (!is_string($local_version['version'])) {
+            $this->error('Cannot get local version string.');
             return false;
         }
 
-        FactorioHelper::info("Local version is \"{$local_version}\".");
+        $this->info("Local version is \"{$local_version['version']}\".");
+
+        // Find out latest version online
+        $latest_version = $this->getLatestRelease();
+        if (!is_string($latest_version)) {
+            $this->error('Cannot get latest release.');
+            return false;
+        }
+
+        $this->info("Latest version is \"{$latest_version}\".");
 
         // Versions are the same => all good!
-        if ($latest_version === $local_version) {
-            FactorioHelper::info('Local version is the latest one.');
+        if ($latest_version === $local_version['version']) {
+            $this->info('Local version is the latest one.');
             return true;
         }
 
         if ($this->opt_noinstall) {
-            FactorioHelper::info('Found a new version, but no-install requested => all done.');
+            $this->info('Found a new version, but no-install requested => all done.');
             return true;
         }
 
-        FactorioHelper::info('Found a new version => update initiated.');
+        $this->info('Found a new version => update initiated.');
 
         // Build a sequence of updates from the "from" version to the "to" version
         // E.g. "2.0.6"=>"2.0.8" will become ['2.0.6=>2.0.7', '2.0.7=>2.0.8']
-        $sequence = $this->getUpdateSequence($local_version, $latest_version);
+        $sequence = $this->getUpdateSequence($local_version['version'], $latest_version);
         if (!is_array($sequence)) {
-            FactorioHelper::error('Cannot get update sequence.');
+            $this->error('Cannot get update sequence.');
             return false;
         }
 
@@ -442,14 +542,14 @@ class FactorioUpdate
         $torem = [];
         $applyResult = $this->applyUpdateSequence($sequence, $torem);
         if (!$applyResult) {
-            FactorioHelper::error('Cannot apply update sequence.');
+            $this->error('Cannot apply update sequence.');
             return false;
         }
 
         foreach ($torem as $onerem) {
-            FactorioHelper::info('Deleting temporary file "' . $onerem . '"...');
+            $this->info('Deleting temporary file "' . $onerem . '"...');
             if (!str_starts_with($onerem, $this->opt_rootdir)) {
-                FactorioHelper::info("Cannot delete file \"{$onerem}\" because it appears to be outside of Factorio rootdir.");
+                $this->info("Cannot delete file \"{$onerem}\" because it appears to be outside of Factorio rootdir.");
                 continue;
             }
             exec('rm ' . escapeshellarg($onerem));
@@ -457,19 +557,59 @@ class FactorioUpdate
 
         // Just make sure we've managed to update Factorio to the latest version.
         $new_local_version = $this->getLocalVersion();
-        if (!is_string($new_local_version)) {
-            FactorioHelper::error('Cannot get new local version.');
+        if (!is_array($new_local_version)) {
+            $this->error('Cannot get new local version.');
+            return false;
+        }
+        if (!is_string($new_local_version['version'])) {
+            $this->error('Cannot get new local version string.');
             return false;
         }
 
         // All good!
-        if ($new_local_version === $latest_version) {
-            FactorioHelper::info('All good, you have the latest version now!');
+        if ($new_local_version['version'] === $latest_version) {
+            $this->info('All good, you have the latest version now!');
             return true;
         }
 
         // Umm...
-        FactorioHelper::error("Local version is \"{$new_local_version}\", but latest release is \"{$latest_version}\" and they are not the same => something went wrong.");
+        $this->error("Local version is \"{$new_local_version['version']}\", but latest release is \"{$latest_version}\" and they are not the same => something went wrong.");
         return false;
+    }
+
+    /**
+     * Run test.
+     *
+     * @return int
+     */
+    private function runtest(): int
+    {
+        $init_version = function (): void {
+            copy(
+                __DIR__ . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, ['..', 'tests', 'assets', 'factoriomock_1.0.0']),
+                __DIR__ . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, ['..', 'tests', 'factroot', 'bin', 'x64', 'version'])
+            );
+        };
+        $test_rootdir = __DIR__ . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, ['..', 'tests', 'factroot']) . DIRECTORY_SEPARATOR;
+        $test_username = 'AZaz09';
+        $test_token = '123456789012345678901234567890';
+        foreach (['stable', 'experimental'] as $test_stable) {
+            $this->info("Running test with params ({$test_stable}, {$test_rootdir}, {$test_username}, {$test_token})...");
+            $init_version();
+            $this->opt_stable = $test_stable;
+            $this->opt_rootdir = $test_rootdir;
+            $this->opt_username = $test_username;
+            $this->opt_token = $test_token;
+            $this->opt_test = true;
+            $this->opt_noinstall = false;
+            $res = $this->doRun();
+            if ($res !== true) {
+                $this->error('Test failed.');
+                return 1;
+            }
+        }
+        $init_version();
+        $this->info('All tests were successful.');
+        return 0;
     }
 }
