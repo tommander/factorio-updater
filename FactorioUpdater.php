@@ -222,8 +222,10 @@ class FactorioUpdater
 	 */
 	public function checkParams(): bool
 	{
-		$this->opt_username = (string) getenv('FACTORIO_USERNAME', true);
-		$this->opt_token = (string) getenv('FACTORIO_TOKEN', true);
+		if (!$this->opt_test) {
+			$this->opt_username = (string) getenv('FACTORIO_USERNAME', true);
+			$this->opt_token = (string) getenv('FACTORIO_TOKEN', true);
+		}
 
 		if ($this->validateString($this->opt_username, static::FMT_USERNAME) === false) {
 			$this->error('Option FA_USERNAME has an invalid value "' . $this->opt_username . '".');

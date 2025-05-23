@@ -29,7 +29,7 @@
         "psalm": "psalm --show-info=true --no-file-cache --no-reflection-cache --no-cache",
         "codecov": "phpunit --coverage-xml 'codecov'",
         "phpunit": "phpunit",
-        "dryrun": "php FactorioUpdater.php --test --quiet",
+        "dryrun": "php FactorioUpdater.php --test",
         "qa": [
             "@selfcheck",
             "@phpcs",

@@ -385,7 +385,8 @@ class FactorioUpdaterTest extends TestCase
 		$this->assertFalse($this->fu->validateString(1, ' '));
 		$this->assertFalse($this->fu->validateString(1.1, ' '));
 		$this->assertFalse($this->fu->validateString((new \stdClass()), ' '));
-		$this->assertFalse($this->fu->validateString(static function () {}, ' '));
+		$this->assertFalse($this->fu->validateString(static function () {
+		}, ' '));
 		$this->assertFalse($this->fu->validateString([], ' '));
 		$this->assertFalse($this->fu->validateString(['a'], ' '));
 	}
@@ -493,19 +494,19 @@ class FactorioUpdaterTest extends TestCase
 		}
 
 		$this->expectOutputString(
-			'[ERROR] File "' . __DIR__ . '/doesnot.exist" does not exist.' . PHP_EOL . 
-			'[ERROR] Cannot fetch JSON from "http://www.example.com/doesnot.exist".' . PHP_EOL . 
-			'[ERROR] Cannot parse JSON downloaded from "/home/tommander/projects/factorio-updater/tests/assets/factoriomock_1.0.0".' . PHP_EOL . 
-			'<something>' . PHP_EOL . 
-			'Version: 1.0.0 (build 1, linux64, headless)' . PHP_EOL . 
-			'Version: 64' . PHP_EOL . 
-			'Map input version: 1.0.0-0' . PHP_EOL . 
-			'Map output version: 1.0.0-0' . PHP_EOL . PHP_EOL . 
+			'[ERROR] File "' . __DIR__ . '/doesnot.exist" does not exist.' . PHP_EOL .
+			'[ERROR] Cannot fetch JSON from "http://www.example.com/doesnot.exist".' . PHP_EOL .
+			'[ERROR] Cannot parse JSON downloaded from "/home/tommander/projects/factorio-updater/tests/assets/factoriomock_1.0.0".' . PHP_EOL .
+			'<something>' . PHP_EOL .
+			'Version: 1.0.0 (build 1, linux64, headless)' . PHP_EOL .
+			'Version: 64' . PHP_EOL .
+			'Map input version: 1.0.0-0' . PHP_EOL .
+			'Map output version: 1.0.0-0' . PHP_EOL . PHP_EOL .
 			'</something>' . PHP_EOL
 		);
-		
+
 		$this->assertFalse($this->fu->downloadJson(__DIR__ . '/doesnot.exist'));
-		$old_handler = set_error_handler(function(int $errno, string $errstr) {
+		$old_handler = set_error_handler(function (int $errno, string $errstr) {
 			return ($errno === E_WARNING && $errstr === 'file_get_contents(http://www.example.com/doesnot.exist): Failed to open stream: HTTP request failed! HTTP/1.1 404 Not Found' . "\r\n");
 		});
 		try {
@@ -552,6 +553,7 @@ class FactorioUpdaterTest extends TestCase
 			$this->fail('FactorioUpdater instance!');
 		}
 
+		$this->fu->opt_test = true;
 		$this->expectOutputString(
 			'[ERROR] The output of the program does not contain a version string.' . PHP_EOL .
 			'<output>' . PHP_EOL . PHP_EOL .
