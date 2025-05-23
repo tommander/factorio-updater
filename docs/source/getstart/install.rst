@@ -63,13 +63,13 @@ Now the script should be ready to use, but if you want to make sure, you can hav
 
 .. code:: sh
 
-   ./fupd.php --test
+   ./FactorioUpdater.php --test
 
 The last line of the script's output should say ``[INFO] All tests were successful.``. If so, the script is ready to serve you.
 
 Step 6 - Secrets (optional)
 ---------------------------
-Now if you plan to use the script for an actual updating, you need two secrets in the file ``.env`` in the root folder of the projects (i.e. where ``fupd.php`` is), otherwise Factorio API won't serve you download links for updates. Even if you plan to always run Factorio Updater with ``--no-install``, these secrets must still be present.
+Now if you plan to use the script for an actual updating, you need two secrets in the file ``.env`` in the root folder of the projects (i.e. where ``FactorioUpdater.php`` is), otherwise Factorio API won't serve you download links for updates. Even if you plan to always run Factorio Updater with ``--no-install``, these secrets must still be present.
 
 The content of the file may look like this:
 

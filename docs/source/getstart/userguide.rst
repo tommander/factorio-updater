@@ -8,19 +8,19 @@ We already touched this option in the `Installation <install.html>`_, Step 5. If
 
 During this self-test, the script does not download anything from the Internet **and** it does not do anything to any of your Factorio installations. Rather, it uses its own mock files to simulate "talking" to a real Factorio API and updating a real Factorio installation. Therefore, this self-test is completely safe and you may run it even offline and without any Factorio installed. It is meant really to just verify that there is no issue in the script flow that we may prevent before we decide to do the real update.
 
-Self-test can be called like this (this expects that your current working directory is the root folder of this project where the ``fupd.php`` file is):
+Self-test can be called like this (this expects that your current working directory is the root folder of this project where the ``FactorioUpdater.php`` file is):
 
 .. code:: sh
 
    # This outputs a lot of text that should end with the info
    # that all tests were successful.
-   ./fupd.php --test
+   ./FactorioUpdater.php --test
 
    # This prevents the script from "talking", so the only way
    # to find out if it was successful is its exit code.
    #   0 = success
    #   1 = error
-   ./fupd.php --test --quiet
+   ./FactorioUpdater.php --test --quiet
 
 Way 2 - normal operation
 ------------------------
@@ -34,17 +34,17 @@ Then you have two optional parameters:
 1. ``--no-install`` which causes the script to just compare the latest and local versions without running an update.
 2. ``--quiet`` which causes the script to not output any text.
 
-So you can call the script e.g. like this (given that your current working directory is the root folder of this project where the ``fupd.php`` file is):
+So you can call the script e.g. like this (given that your current working directory is the root folder of this project where the ``FactorioUpdater.php`` file is):
 
 .. code:: sh
 
    # Check and update
-   ./fupd.php --stable="stable" --rootdir="/home/user/factorio"
+   ./FactorioUpdater.php --stable="stable" --rootdir="/home/user/factorio"
    # Only check
-   ./fupd.php --stable="stable" --rootdir="/home/user/factorio" --no-install
+   ./FactorioUpdater.php --stable="stable" --rootdir="/home/user/factorio" --no-install
    # Check and update, no "talking"
-   ./fupd.php --stable="stable" --rootdir="/home/user/factorio" --quiet
+   ./FactorioUpdater.php --stable="stable" --rootdir="/home/user/factorio" --quiet
    # Only check, no "talking"
-   ./fupd.php --stable="stable" --rootdir="/home/user/factorio" --no-install --quiet
+   ./FactorioUpdater.php --stable="stable" --rootdir="/home/user/factorio" --no-install --quiet
 
 At least at the beginning (after installation of this script), it is recommended not to use the ``--quiet`` option, so the script can tell you if there's an issue. This option makes more sense when used in some automated solutions which can respond to the exit code of the script.

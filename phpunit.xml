@@ -11,4 +11,9 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <source>
+        <include>
+            <file>FactorioUpdater.php</file>
+        </include>
+    </source>
 </phpunit>

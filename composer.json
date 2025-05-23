@@ -27,9 +27,11 @@
         "selfcheck": "composer validate --strict",
         "phpcs": "phpcs",
         "psalm": "psalm --show-info=true --no-file-cache --no-reflection-cache --no-cache",
+        "codecov": "phpunit --coverage-xml 'codecov'",
         "phpunit": "phpunit",
-        "dryrun": "./fupd.php --test --quiet",
+        "dryrun": "php FactorioUpdater.php --test --quiet",
         "qa": [
+            "@selfcheck",
             "@phpcs",
             "@psalm",
             "@phpunit",
@@ -51,11 +53,8 @@
     },
     "autoload": {
         "psr-4": {
-            "TMD\\FUPD\\": "src",
-            "TMD\\FUPD\\Tests\\": "tests"
+            "TMD\\FactorioUpdater\\": "",
+            "TMD\\FactorioUpdater\\Tests\\": "tests"
         }
-    },
-    "require": {
-        "vlucas/phpdotenv": "^5.6"
     }
 }

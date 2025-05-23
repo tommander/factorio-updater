@@ -32,7 +32,7 @@ composer install --no-dev
 
 ## Usage
 
-Before running the script, save your Factorio username and token to the `.env` file (in the same folder as `fupd.php`). You'll find both of these on your [Factorio Profile](https://factorio.com/profile).
+Before running the script, save your Factorio username and token to the `.env` file (in the same folder as `FactorioUpdater.php`). You'll find both of these on your [Factorio Profile](https://factorio.com/profile).
 
 ```dotenv
 FA_USERNAME="myusername"
@@ -41,13 +41,13 @@ FA_TOKEN="mysecrettoken"
 
 To verify that the script is ready to rock'n'roll:
 
-`/some/folder/factorio-updater/fupd.php --test`
+`/some/folder/factorio-updater/FactorioUpdater.php --test`
 
 If the last line printed by the program is `[INFO] All tests were successful.`, you're good to go.
 
 Then you can run:
 
-`/some/folder/factorio-updater/fupd.php --stable="stable" --rootdir="/some/folder/factorio"`
+`/some/folder/factorio-updater/FactorioUpdater.php --stable="stable" --rootdir="/some/folder/factorio"`
 
 ### Parameters
 
@@ -72,7 +72,7 @@ The `composer.json` contains the custom `qa` script that runs the following chec
 - PHP CodeSniffer (PSR-12 + PHPCompatibility)
 - Psalm (strict check with error level 1)
 - PHPUnit
-- `fupd.php --test --quiet`
+- `FactorioUpdater.php --test --quiet`
 
 This script runs on pushes/PRs to the "main" branch.
 

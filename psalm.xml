@@ -12,8 +12,7 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
     <projectFiles>
-        <file name="fupd.php" />
-        <directory name="src" />
+        <file name="FactorioUpdater.php" />
         <directory name="tests" />
         <ignoreFiles>
             <directory name="vendor" />

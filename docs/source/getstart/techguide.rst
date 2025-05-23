@@ -2,7 +2,7 @@ Technical guide
 ===============
 Here I'd like to explain a little bit how the code is structured and what is the program flow.
 
-The main file, ``fupd.php`` parses options given to the script from the command line. Based on them, it decides what to do. There are two "cases", i.e. two decisions the script can do, apart from exiting due to an error/exception.
+The main file, ``FactorioUpdater.php`` parses options given to the script from the command line. Based on them, it decides what to do. There are two "cases", i.e. two decisions the script can do, apart from exiting due to an error/exception.
 
 Script options
 --------------
@@ -50,7 +50,7 @@ Case 2 - normal operation
 -------------------------
 If the option ``--test`` is *not* present, the options above marked as "Required" really must be present, because they give the script all necessary information for downloading correct updates.
 
-The file ``fupd.php`` really just creates a new instance of the class :php:class:`TMD\\FUPD\\FactorioUpdate` (specifically, it calls its method :php:meth:`TMD\\FUPD\\FactorioUpdate::run`). All the actual code is present in that class.
+The file ``FactorioUpdater.php`` really just creates a new instance of the class :php:class:`TMD\\FUPD\\FactorioUpdate` (specifically, it calls its method :php:meth:`TMD\\FUPD\\FactorioUpdate::run`). All the actual code is present in that class.
 
 The method does all the checks of the option values given to it, so it won't continue if e.g. the Factorio root directory is not writable for the script.
 
