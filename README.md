@@ -32,7 +32,7 @@ PREREQUISITES
 INSTALLATION
     Download the latest Factorio Updater release:
     
-        https://github.com/tommander/factorio-updater/releases/latest/fupd.php
+        https://github.com/tommander/factorio-updater/releases/latest/fupd.zip
 
     Edit the file. At the end there are two lines starting with `putenv`, so r-
     eplace "abcd" with your Factorio username and "efgh" with your Factorio to-
