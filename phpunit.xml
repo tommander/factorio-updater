@@ -13,7 +13,8 @@
     </testsuites>
     <source>
         <include>
-            <file>FactorioUpdater.php</file>
+            <!--<file>fupd.php</file>-->
+            <file>src/FactorioUpdater.php</file>
         </include>
     </source>
 </phpunit>

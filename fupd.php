@@ -1,17 +1,11 @@
 <?php
 
 /**
- * Factorio Updater
+ * Factorio Updater. A PHP script for automated upgrade of headless Factorio installations.
  *
- * This script checks the latest available version of Factorio and compares
- * it with the local version. If there is a new version available, it will
- * automatically attempt to update the local installation.
- *
- * Use like this:
- *
- * ```
- * ./FactorioUpdater.php --stable="stable" --rootdir="/home/somebody/factorio"
- * ```
+ * @copyright (c) 2024-2025 Tomáš "Tommander" Rajnoha.
+ * @license MIT
+ * @see https://github.com/tommander/factorio-updater
  */
 
 declare(strict_types=1);
@@ -23,19 +17,19 @@ class FactorioUpdater
 	/** @var non-empty-string */
 	public const URL_LATEST = 'https://factorio.com/api/latest-releases';
 	/** @var non-empty-string */
-	public const URL_LATEST_TEST = __DIR__ . '/tests/assets/latest-releases.json';
+	public const URL_LATEST_TEST = '/tests/assets/latest-releases.json';
 	/** @var non-empty-string */
 	public const URL_AVAILABLE = 'https://updater.factorio.com/get-available-versions';
 	/** @var non-empty-string */
-	public const URL_AVAILABLE_TEST = __DIR__ . '/tests/assets/get-available-versions.json';
+	public const URL_AVAILABLE_TEST = '/tests/assets/get-available-versions.json';
 	/** @var non-empty-string */
 	public const URL_UPDATE = 'https://updater.factorio.com/get-download-link?username=%1$s&token=%2$s&package=%3$s&from=%4$s&to=%5$s';
 	/** @var non-empty-string */
-	public const URL_UPDATE_TEST = __DIR__ . '/tests/assets/get-download-link-%1$s-%2$s-%3$s-%4$s-%5$s.json';
+	public const URL_UPDATE_TEST = '/tests/assets/get-download-link-%1$s-%2$s-%3$s-%4$s-%5$s.json';
 	/** @var non-empty-string */
 	public const URL_DOWNLOAD_PREFIX = 'https://dl.factorio.com/';
 	/** @var non-empty-string */
-	public const URL_DOWNLOAD_PREFIX_TEST = __DIR__ . '/tests/assets/factoriomock_';
+	public const URL_DOWNLOAD_PREFIX_TEST = '/tests/assets/factoriomock_';
 	/** @var non-empty-string */
 	public const FMT_VERSION = '/^\d+\.\d+\.\d+$/';
 	/** @var non-empty-string */
@@ -56,6 +50,12 @@ class FactorioUpdater
 	public bool $opt_noinstall = false;
 	public string $opt_username = 'AZaz09';
 	public string $opt_token = '123456789012345678901234567890';
+	public string $pwd;
+
+	public function __construct(?string $pwd = null)
+	{
+		$this->pwd = $pwd ?? (__DIR__ . '/..');
+	}
 
 	/**
 	 * Error.
@@ -228,12 +228,12 @@ class FactorioUpdater
 		}
 
 		if ($this->validateString($this->opt_username, static::FMT_USERNAME) === false) {
-			$this->error('Option FA_USERNAME has an invalid value "' . $this->opt_username . '".');
+			$this->error('Factorio Username has an invalid value "' . $this->opt_username . '".');
 			return false;
 		}
 
 		if ($this->validateString($this->opt_token, static::FMT_TOKEN) === false) {
-			$this->error('Option FA_TOKEN has an invalid value "' . $this->opt_token . '".');
+			$this->error('Factorio Token has an invalid value "' . $this->opt_token . '".');
 			return false;
 		}
 
@@ -284,7 +284,7 @@ class FactorioUpdater
 	 */
 	public function getLatestRelease(?string $custom_url = null): string|false
 	{
-		$url_latest = $custom_url ?? ($this->opt_test ? static::URL_LATEST_TEST : static::URL_LATEST);
+		$url_latest = $custom_url ?? ($this->opt_test ? $this->pwd . static::URL_LATEST_TEST : static::URL_LATEST);
 		$json_latest = $this->downloadJson($url_latest);
 		if (!is_array($json_latest)) {
 			$this->error(json_encode($json_latest) . ' is not an array.');
@@ -358,9 +358,9 @@ class FactorioUpdater
 	 * @return list<array{from: string,to: string}>|false Array of from-to combinations on
 	 *                                              success, false otherwise.
 	 */
-	public function getUpdateSequence(string $from_version, string $to_version): array|false
+	public function getUpdateSequence(string $from_version, string $to_version, ?string $custom_url = null): array|false
 	{
-		$url_available = $this->opt_test ? static::URL_AVAILABLE_TEST : static::URL_AVAILABLE;
+		$url_available = $custom_url ?? ($this->opt_test ? $this->pwd . static::URL_AVAILABLE_TEST : static::URL_AVAILABLE);
 		$json_available = $this->downloadJson($url_available);
 		if (!is_array($json_available)) {
 			$this->error(json_encode($json_available) . ' is not an array.');
@@ -423,10 +423,10 @@ class FactorioUpdater
 	 *
 	 * @return bool
 	 */
-	public function applyUpdateSequence(array $sequence, array &$tempFiles): bool
+	public function applyUpdateSequence(array $sequence, array &$tempFiles, ?string $custom_url = null, ?string $custom_url_prefix = null): bool
 	{
 		$fx = $this->factorioExec();
-		$url_update = $this->opt_test ? static::URL_UPDATE_TEST : static::URL_UPDATE;
+		$url_update = $custom_url ?? ($this->opt_test ? $this->pwd . static::URL_UPDATE_TEST : static::URL_UPDATE);
 		foreach ($sequence as $one_update) {
 			// Download update link
 			$this->info('Downloading link for "' . $one_update['from'] . '" => "' . $one_update['to'] . '"...');
@@ -442,9 +442,9 @@ class FactorioUpdater
 				return false;
 			}
 			if ($this->opt_test) {
-				$blam = __DIR__ . $blam;
+				$blam = $this->pwd . $blam;
 			}
-			$url_download_prefix = $this->opt_test ? static::URL_DOWNLOAD_PREFIX_TEST : static::URL_DOWNLOAD_PREFIX;
+			$url_download_prefix = $custom_url_prefix ?? ($this->opt_test ? $this->pwd . static::URL_DOWNLOAD_PREFIX_TEST : static::URL_DOWNLOAD_PREFIX);
 			if (!str_starts_with($blam, $url_download_prefix)) {
 				$this->error('Update link\'s first item does not start with "' . $url_download_prefix . '".' . PHP_EOL . $blam);
 				return false;
@@ -482,13 +482,8 @@ class FactorioUpdater
 	 *
 	 * @return int
 	 */
-	public function doRun(): int
+	public function runReal(): int
 	{
-		if ($this->checkParams() !== true) {
-			$this->error('Error when checking params.');
-			return 1;
-		}
-
 		// Find out current local version
 		$local_version = $this->getLocalVersion();
 		if (!is_array($local_version)) {
@@ -499,7 +494,6 @@ class FactorioUpdater
 			$this->error('Cannot get local version string.');
 			return 1;
 		}
-
 		$this->info("Local version is \"{$local_version['version']}\".");
 
 		// Find out latest version online
@@ -508,7 +502,6 @@ class FactorioUpdater
 			$this->error('Cannot get latest release.');
 			return 1;
 		}
-
 		$this->info("Latest version is \"{$latest_version}\".");
 
 		// Versions are the same => all good!
@@ -531,7 +524,6 @@ class FactorioUpdater
 			$this->error('Cannot get update sequence.');
 			return 1;
 		}
-
 
 		// One by one in the sequence: get download link, download update following that link and apply that update.
 		$torem = [];
@@ -577,20 +569,20 @@ class FactorioUpdater
 	 *
 	 * @return int
 	 */
-	public function runtest(): int
+	public function runTest(): int
 	{
-		if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . 'tests')) {
+		if (!file_exists($this->pwd . DIRECTORY_SEPARATOR . 'tests')) {
 			$this->error('Tests cannot run without the tests directory.');
 			return 1;
 		}
 
 		$init_version = function (): void {
 			copy(
-				implode(DIRECTORY_SEPARATOR, [__DIR__, 'tests', 'assets', 'factoriomock_1.0.0']),
-				implode(DIRECTORY_SEPARATOR, [__DIR__, 'tests', 'factroot', 'bin', 'x64', 'version'])
+				$this->pwd . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, ['tests', 'assets', 'factoriomock_1.0.0']),
+				$this->pwd . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, ['tests', 'factroot', 'bin', 'x64', 'version'])
 			);
 		};
-		$test_rootdir = implode(DIRECTORY_SEPARATOR, [__DIR__, 'tests', 'factroot']) . DIRECTORY_SEPARATOR;
+		$test_rootdir = $this->pwd . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, ['tests', 'factroot']) . DIRECTORY_SEPARATOR;
 		foreach (static::ARR_STABLE as $test_stable) {
 			$this->info("Running test with params ({$test_stable}, {$test_rootdir})...");
 			$init_version();
@@ -598,9 +590,7 @@ class FactorioUpdater
 			$this->opt_rootdir = $test_rootdir;
 			$this->opt_test = true;
 			$this->opt_noinstall = false;
-			$this->opt_username = 'AZaz09';
-			$this->opt_token = '123456789012345678901234567890';
-			$res = $this->doRun();
+			$res = $this->runReal();
 			if ($res !== 0) {
 				$this->error('Test failed.');
 				return 1;
@@ -611,6 +601,7 @@ class FactorioUpdater
 		return 0;
 	}
 
+	/** @psalm-suppress PossiblyUnusedMethod */
 	public function run(): int
 	{
 		if (!$this->loadOptions()) {
@@ -618,15 +609,16 @@ class FactorioUpdater
 			return 1;
 		}
 
-		return $this->opt_test ? $this->runtest() : $this->doRun();
-	}
+		if ($this->checkParams() !== true) {
+			$this->error('Error when checking params.');
+			return 1;
+		}
 
-	public static function scriptIncluded(): bool
-	{
-		return (isset($_SERVER['SCRIPT_FILENAME']) && realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME'])) || !defined('PHPUNIT_COMPOSER_INSTALL');
+		return $this->opt_test ? $this->runTest() : $this->runReal();
 	}
 }
 
-if (FactorioUpdater::scriptIncluded()) {
-	exit((new FactorioUpdater())->run());
-}
+putenv('FACTORIO_USERNAME=abcd');
+putenv('FACTORIO_TOKEN=efgh');
+
+exit((new \TMD\FactorioUpdater\FactorioUpdater(__DIR__))->run());

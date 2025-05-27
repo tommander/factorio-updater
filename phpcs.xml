@@ -2,7 +2,8 @@
 <ruleset name="TMDRS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
     <description>TMD Ruleset</description>
 
-    <file>FactorioUpdater.php</file>
+    <!--<file>fupd.php</file>-->
+    <file>src</file>
     <file>tests</file>
 
     <exclude-pattern>*/vendor/*</exclude-pattern>

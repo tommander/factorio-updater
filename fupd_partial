@@ -1,0 +1,5 @@
+
+putenv('FACTORIO_USERNAME=abcd');
+putenv('FACTORIO_TOKEN=efgh');
+
+exit((new \TMD\FactorioUpdater\FactorioUpdater(__DIR__))->run());

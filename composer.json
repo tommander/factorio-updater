@@ -29,13 +29,12 @@
         "psalm": "psalm --show-info=true --no-file-cache --no-reflection-cache --no-cache",
         "codecov": "phpunit --coverage-xml 'codecov'",
         "phpunit": "phpunit",
-        "dryrun": "php FactorioUpdater.php --test",
+        "dryrun": "php fupd.php --test",
         "qa": [
             "@selfcheck",
             "@phpcs",
             "@psalm",
-            "@phpunit",
-            "@dryrun"
+            "@phpunit"
         ],
         "phpdocs": [
             "rm -rf docs/source/api/*",
@@ -53,7 +52,7 @@
     },
     "autoload": {
         "psr-4": {
-            "TMD\\FactorioUpdater\\": "",
+            "TMD\\FactorioUpdater\\": "src",
             "TMD\\FactorioUpdater\\Tests\\": "tests"
         }
     }
