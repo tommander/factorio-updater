@@ -37,9 +37,9 @@
             "@phpunit"
         ],
         "phpdocs": [
-            "rm -rf docs/source/api/*",
-            "touch docs/source/api/.gitkeep",
-            "@php vendor/bin/phpsphinx --inputdir=\".\" --outputdir=\"docs/source/api\""
+            "rm -rf docsrc/api/*",
+            "touch docsrc/api/.gitkeep",
+            "@php vendor/bin/phpsphinx -i \"phpdoc/structure.xml\" -o \"docsrc/api\""
         ],
         "sphinx": [
             "make clean",
