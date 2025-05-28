@@ -1,19 +1,2 @@
-#!/usr/bin/php
-<?php
-$opt = getopt('', ['version', 'apply-update:']);
-if (array_key_exists('version', $opt)) {
-    $ver = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'version');
-    if (is_string($ver)) {
-        echo $ver;
-        return;
-    }
-    return;
-}
-if (array_key_exists('apply-update', $opt) && is_string($opt['apply-update'])) {
-    $newver = file_get_contents($opt['apply-update']);
-    if (is_string($newver)) {
-        file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . 'version', $newver);
-        return;
-    }
-    return;
-}
+#!/bin/sh
+echo "boo"

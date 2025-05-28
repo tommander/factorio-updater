@@ -1,6 +1,0 @@
-#!/usr/bin/env php
-<?php
-echo 'Version: 1.0.0 (build 1, linux32, headful)' . PHP_EOL .
-     'Version: 64' . PHP_EOL .
-     'Map input version: 1.0.0-0' . PHP_EOL .
-     'Map output version: 1.0.0-0' . PHP_EOL;

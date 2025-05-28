@@ -10,7 +10,6 @@ namespace TMD\FactorioUpdater\Tests;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use TMD\FactorioUpdater\FactorioUpdater;
 
 /** @psalm-suppress UnusedClass */
@@ -32,9 +31,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function error(string $message): void
 	public function testFunctionError(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->expectOutputString("[ERROR] <script>window.alert('\"Boo\"');</script>" . PHP_EOL);
 		$this->fu->error('<script>window.alert(\'"Boo"\');</script>');
@@ -45,9 +42,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function info(string $message): void
 	public function testFunctionInfo(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->expectOutputString("[INFO] <script>window.location.href=\"http://hackers.org/\";</script>" . PHP_EOL);
 		$this->fu->info('<script>window.location.href="http://hackers.org/";</script>');
@@ -58,9 +53,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsDefault(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = 'incorrect';
 		$this->fu->opt_rootdir = '/dev/null';
@@ -81,9 +74,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsShortNotDir(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -104,9 +95,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsShortWithDir(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -127,9 +116,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsShortQuietFail(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -149,9 +136,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsShortTest(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -171,9 +156,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsShortQuietTest(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -193,9 +176,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsLongNotDir(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -216,9 +197,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsLongWithDir(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -239,9 +218,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsLongQuietFail(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -261,9 +238,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsLongTest(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -283,9 +258,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsLongQuietTest(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -305,9 +278,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsShortBeforeLong(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -328,9 +299,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function loadOptions(): bool
 	public function testFunctionLoadOptionsFixture(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_stable = '';
 		$this->fu->opt_rootdir = '';
@@ -350,23 +319,40 @@ class FactorioUpdaterTest extends TestCase
 	// public function factorioExec(?string $rootdir = null): string
 	public function testFunctionFactorioExec(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_rootdir = '/tmp/';
 		$res_opt = $this->fu->factorioExec();
-		$res_cust = $this->fu->factorioExec('');
 		$this->assertSame('/tmp/bin/x64/factorio', $res_opt);
-		$this->assertSame('bin/x64/factorio', $res_cust);
+	}
+
+	// public function runFactorioVersion(): string|false
+	public function testFunctionRunFactorioVersion(): void
+	{
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
+
+		$this->fu->opt_test = true;
+		$this->fu->factorio_exec_mock = 'Abcd1234';
+		$this->assertSame($this->fu->factorio_exec_mock, $this->fu->runFactorioVersion());
+	}
+
+	// public function runFactorioApplyUpdate(string $update_file, string &$update_out): int
+	public function testFunctionRunFactorioApplyUpdate(): void
+	{
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
+
+		$this->fu->opt_test = true;
+		$out = '';
+		$res = $this->fu->runFactorioApplyUpdate('Xyz987', $out);
+		$this->assertSame('Xyz987', $this->fu->factorio_exec_mock);
+		$this->assertSame('', $out);
+		$this->assertSame(0, $res);
 	}
 
 	// public function validateString(mixed $something, string $regex): string|false
 	public function testFunctionValidateStringNotString(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->expectOutputString(
 			'[ERROR] null is not a string.' . PHP_EOL .
@@ -389,14 +375,14 @@ class FactorioUpdaterTest extends TestCase
 		}, ' '));
 		$this->assertFalse($this->fu->validateString([], ' '));
 		$this->assertFalse($this->fu->validateString(['a'], ' '));
+		$this->assertSame('', $this->fu->validateString('', '/.*/'));
+		$this->assertSame(\stdClass::class, $this->fu->validateString(\stdClass::class, '/.*/'));
 	}
 
 	// public function validateString(mixed $something, string $regex): string|false
 	public function testFunctionValidateStringRegex(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->expectOutputString(
 			'[ERROR] " " is not a valid string based on "/^$/".' . PHP_EOL .
@@ -415,9 +401,7 @@ class FactorioUpdaterTest extends TestCase
 	// public function validateRootdir(): bool
 	public function testFunctionValidateRootDir(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->expectOutputString(
 			'[ERROR] Rootdir "/doesnotexist" does not exist.' . PHP_EOL .
@@ -455,70 +439,43 @@ class FactorioUpdaterTest extends TestCase
 	// public function checkParams(): bool
 	public function testFunctionCheckParams(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
-		$this->expectOutputString(
-			'[ERROR] "" is not a valid string based on "/^[A-Za-z0-9_-]+$/".' . PHP_EOL .
-			'[ERROR] Factorio Username has an invalid value "".' . PHP_EOL .
-			'[ERROR] "\u0158" is not a valid string based on "/^[A-Za-z0-9_-]+$/".' . PHP_EOL .
-			'[ERROR] Factorio Username has an invalid value "Ř".' . PHP_EOL .
-			'[ERROR] "Abcdef789012345678901234567890" is not a valid string based on "/^[0-9a-f]{30}$/".' . PHP_EOL .
-			'[ERROR] Factorio Token has an invalid value "Abcdef789012345678901234567890".' . PHP_EOL
-		);
-
-		putenv('FACTORIO_USERNAME=');
-		putenv('FACTORIO_TOKEN=');
-		$this->assertFalse($this->fu->checkParams());
-
-		putenv('FACTORIO_USERNAME=Ř');
-		putenv('FACTORIO_TOKEN=123456789012345678901234567890');
-		$this->assertFalse($this->fu->checkParams());
-
-		putenv('FACTORIO_USERNAME=AMZ_amz-059');
-		putenv('FACTORIO_TOKEN=Abcdef789012345678901234567890');
-		$this->assertFalse($this->fu->checkParams());
-
-		putenv('FACTORIO_USERNAME=AMZ_amz-059');
-		putenv('FACTORIO_TOKEN=abcdef789012345678901234567890');
+		$this->fu->opt_test = true;
 		$this->assertTrue($this->fu->checkParams());
 	}
 
 	// public function downloadJson(string $url): array|false
-	#[WithoutErrorHandler]
 	public function testFunctionDownloadJson(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->expectOutputString(
-			'[ERROR] File "' . __DIR__ . '/doesnot.exist" does not exist.' . PHP_EOL .
-			'[ERROR] Cannot parse JSON downloaded from "' . __DIR__ . '/assets/factoriomock_1.0.0".' . PHP_EOL .
+			'[ERROR] Cannot parse JSON downloaded from "string:".' . PHP_EOL .
+			'<something>' . PHP_EOL . PHP_EOL .
+			'</something>' . PHP_EOL .
+			'[ERROR] Cannot parse JSON downloaded from "string:null".' . PHP_EOL .
 			'<something>' . PHP_EOL .
-			'Version: 1.0.0 (build 1, linux64, headless)' . PHP_EOL .
-			'Version: 64' . PHP_EOL .
-			'Map input version: 1.0.0-0' . PHP_EOL .
-			'Map output version: 1.0.0-0' . PHP_EOL . PHP_EOL .
+			'null' . PHP_EOL .
 			'</something>' . PHP_EOL
 		);
 
-		$this->assertFalse($this->fu->downloadJson(__DIR__ . '/doesnot.exist'));
-		$this->assertFalse($this->fu->downloadJson(__DIR__ . '/assets/factoriomock_1.0.0'));
-		$this->assertSame(["/tests/assets/factoriomock_1.0.1"], $this->fu->downloadJson(__DIR__ . '/assets/get-download-link-AZaz09-123456789012345678901234567890-core-linux_headless64-1.0.0-1.0.1.json'));
+		$this->assertFalse($this->fu->downloadJson('string:'));
+		$this->assertFalse($this->fu->downloadJson('string:null'));
+		$this->assertSame([], $this->fu->downloadJson('string:{}'));
+		$this->assertSame([], $this->fu->downloadJson('string:[]'));
+		$this->assertSame(['a'], $this->fu->downloadJson('string:["a"]'));
+		$this->assertSame(['a' => 1], $this->fu->downloadJson('string:{"a":1}'));
 	}
 
 	// public function getLatestRelease(): string|false
 	public function testFunctionGetLatestRelease(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 		$this->fu->opt_test = true;
 
 		$this->expectOutputString(
-			'[ERROR] Cannot parse JSON downloaded from "' . __DIR__ . '/testdata/latest_release_not-array.json".' . PHP_EOL .
+			'[ERROR] Cannot parse JSON downloaded from "string:true".' . PHP_EOL .
 			'<something>' . PHP_EOL .
 			'true' . PHP_EOL .
 			'</something>' . PHP_EOL .
@@ -529,41 +486,39 @@ class FactorioUpdaterTest extends TestCase
 			'[ERROR] "a.2.3" is not a valid string based on "/^\d+\.\d+\.\d+$/".' . PHP_EOL
 		);
 
-		$this->assertFalse($this->fu->getLatestRelease(__DIR__ . '/testdata/latest_release_not-array.json'));
-		$this->assertFalse($this->fu->getLatestRelease(__DIR__ . '/testdata/latest_release_miss-key.json'));
-		$this->assertFalse($this->fu->getLatestRelease(__DIR__ . '/testdata/latest_release_key-not-array.json'));
-		$this->assertFalse($this->fu->getLatestRelease(__DIR__ . '/testdata/latest_release_miss-build.json'));
-		$this->assertFalse($this->fu->getLatestRelease(__DIR__ . '/testdata/latest_release_invalid-version.json'));
+		$this->assertFalse($this->fu->getLatestRelease('string:true'));
+		$this->assertFalse($this->fu->getLatestRelease('string:{"a": "b"}'));
+		$this->assertFalse($this->fu->getLatestRelease('string:{"stable": "yes"}'));
+		$this->assertFalse($this->fu->getLatestRelease('string:{"stable": {"maybe": "not"}}'));
+		$this->assertFalse($this->fu->getLatestRelease('string:{"stable": {"headless": "a.2.3"}}'));
 		$this->assertSame('1.1.0', $this->fu->getLatestRelease());
 	}
 
 	// public function getLocalVersion(): array|false
 	public function testFunctionGetLocalVersion(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 
 		$this->fu->opt_test = true;
 		$this->expectOutputString(
 			'[ERROR] The output of the program does not contain a version string.' . PHP_EOL .
 			'<output>' . PHP_EOL .
-			'BOO!' . PHP_EOL .
+			'BOO!' . PHP_EOL . PHP_EOL .
 			'</output>' . PHP_EOL .
 			'[ERROR] Unsupported distro "linux32".' . PHP_EOL .
 			'[ERROR] Unsupported build "headful".' . PHP_EOL
 		);
 
-		$this->fu->opt_rootdir = __DIR__ . '/testdata/factorio_not-version/';
+		$this->fu->factorio_exec_mock = "BOO!\n";
 		$this->assertFalse($this->fu->getLocalVersion());
 
-		$this->fu->opt_rootdir = __DIR__ . '/testdata/factorio_bad-distro/';
+		$this->fu->factorio_exec_mock = "Version: 1.0.0 (build 1, linux32, headful)\nVersion: 64\nMap input version: 1.0.0-0\nMap output version: 1.0.0-0\n";
 		$this->assertFalse($this->fu->getLocalVersion());
 
-		$this->fu->opt_rootdir = __DIR__ . '/testdata/factorio_bad-build/';
+		$this->fu->factorio_exec_mock = "Version: 1.0.0 (build 1, linux64, headful)\nVersion: 64\nMap input version: 1.0.0-0\nMap output version: 1.0.0-0\n";
 		$this->assertFalse($this->fu->getLocalVersion());
 
-		$this->fu->opt_rootdir = __DIR__ . '/factroot/';
+		$this->fu->factorio_exec_mock = "Version: 1.0.0 (build 1, linux64, headless)\nVersion: 64\nMap input version: 1.0.0-0\nMap output version: 1.0.0-0\n";
 		$res = $this->fu->getLocalVersion();
 		$this->assertIsArray($res);
 		$this->assertArrayHasKey('version', $res);
@@ -579,13 +534,11 @@ class FactorioUpdaterTest extends TestCase
 	// public function getUpdateSequence(string $from_version, string $to_version): array|false
 	public function testFunctionGetUpdateSequence(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 		$this->fu->opt_test = true;
 
 		$this->expectOutputString(
-			'[ERROR] Cannot parse JSON downloaded from "' . __DIR__ . '/testdata/latest_release_not-array.json".' . PHP_EOL .
+			'[ERROR] Cannot parse JSON downloaded from "string:true".' . PHP_EOL .
 			'<something>' . PHP_EOL .
 			'true' . PHP_EOL .
 			'</something>' . PHP_EOL .
@@ -599,29 +552,32 @@ class FactorioUpdaterTest extends TestCase
 			'[ERROR] null is not a string.' . PHP_EOL .
 			'[ERROR] {"core-linux_headless64":[{"from":"1.0.0","to":"1.0.1"},{"from":"1.0.1","to":"1.1.0"},{"from":"1.1.0","to":"1.1.1"},{"stable":"1.1.0"}]} key "core-linux_headless64" does not contain a sequence of updates from "0.1.0" to "1.1.1".' . PHP_EOL
 		);
-		$this->assertFalse($this->fu->getUpdateSequence('', '', __DIR__ . '/testdata/latest_release_not-array.json'));
-		$this->assertFalse($this->fu->getUpdateSequence('', '', __DIR__ . '/testdata/latest_release_miss-key.json'));
-		$this->assertFalse($this->fu->getUpdateSequence('', '', __DIR__ . '/testdata/update_sequence_key-not-array.json'));
-		$this->assertFalse($this->fu->getUpdateSequence('1.0.0', '1.2.0', __DIR__ . '/assets/get-available-versions.json'));
-		$this->assertFalse($this->fu->getUpdateSequence('0.1.0', '1.1.1', __DIR__ . '/assets/get-available-versions.json'));
-		$this->assertSame([['from' => '1.0.0', 'to' => '1.0.1']], $this->fu->getUpdateSequence('1.0.0', '1.0.1', __DIR__ . '/assets/get-available-versions.json'));
-		$this->assertSame([['from' => '1.0.0', 'to' => '1.0.1'], ['from' => '1.0.1', 'to' => '1.1.0'], ['from' => '1.1.0', 'to' => '1.1.1']], $this->fu->getUpdateSequence('1.0.0', '1.1.1', __DIR__ . '/assets/get-available-versions.json'));
+		$this->assertFalse($this->fu->getUpdateSequence('', '', 'string:true'));
+		$this->assertFalse($this->fu->getUpdateSequence('', '', 'string:{"a": "b"}'));
+		$this->assertFalse($this->fu->getUpdateSequence('', '', 'string:{"core-linux_headless64": "yes"}'));
+		$this->assertFalse($this->fu->getUpdateSequence('1.0.0', '1.2.0'));
+		$this->assertFalse($this->fu->getUpdateSequence('0.1.0', '1.1.1'));
+		$this->assertSame([['from' => '1.0.0', 'to' => '1.0.1']], $this->fu->getUpdateSequence('1.0.0', '1.0.1'));
+		$this->assertSame([['from' => '1.0.0', 'to' => '1.0.1'], ['from' => '1.0.1', 'to' => '1.1.0'], ['from' => '1.1.0', 'to' => '1.1.1']], $this->fu->getUpdateSequence('1.0.0', '1.1.1'));
 	}
 
 	// public function applyUpdateSequence(array $sequence, array &$tempFiles): bool
 	public function testFunctionApplyUpdateSequence(): void
 	{
-		if (!$this->fu) {
-			$this->fail('FactorioUpdater instance!');
-		}
+		(!$this->fu) && $this->fail('FactorioUpdater instance!');
 		$this->fu->opt_test = true;
-		$this->fu->opt_rootdir = __DIR__ . '/testdata/factorio_cantupdate/';
 		$tempfiles = [];
 
-		$downdir = realpath(__DIR__ . '/../');
 		$this->expectOutputString(
 			'[INFO] Downloading link for "1.0.0" => "1.0.1"...' . PHP_EOL .
-			'[ERROR] Cannot parse JSON downloaded from "' . __DIR__ . '/testdata/update_link_not-array_AZaz09_123456789012345678901234567890_core-linux_headless64_1.0.0_1.0.1.json".' . PHP_EOL .
+			'[ERROR] Cannot parse JSON downloaded from "<hidden>".' . PHP_EOL .
+			'<something>' . PHP_EOL . PHP_EOL .
+			'</something>' . PHP_EOL .
+			'[ERROR] Update link is not a non-empty array.' . PHP_EOL .
+			'false' . PHP_EOL .
+
+			'[INFO] Downloading link for "1.0.0" => "1.0.1"...' . PHP_EOL .
+			'[ERROR] Cannot parse JSON downloaded from "<hidden>".' . PHP_EOL .
 			'<something>' . PHP_EOL .
 			'false' . PHP_EOL .
 			'</something>' . PHP_EOL .
@@ -637,41 +593,18 @@ class FactorioUpdaterTest extends TestCase
 			'[false]' . PHP_EOL .
 
 			'[INFO] Downloading link for "1.0.0" => "1.0.1"...' . PHP_EOL .
-			'[ERROR] Update link\'s first item does not start with "' . $downdir . '/src/../tests/testdata/factorio_nope".' . PHP_EOL .
-			$downdir . '/src/../tests/testdata/factorio_whaaat/factorio' . PHP_EOL .
-
-			'[INFO] Downloading link for "1.0.0" => "1.0.1"...' . PHP_EOL .
-			'[ERROR] The downloaded update binary is not a string.' . PHP_EOL .
-			'false' . PHP_EOL .
-
-			'[INFO] Downloading link for "1.0.0" => "1.0.1"...' . PHP_EOL .
-			'[INFO] Saving the downloaded update binary...' . PHP_EOL .
-			'[INFO] Applying update...' . __DIR__ . '/testdata/factorio_cantupdate/bin/x64/factorio --apply-update ' . __DIR__ . '/testdata/factorio_cantupdate/upd_1.0.0_1.0.1.zip' . PHP_EOL .
-			'[ERROR] Update failed.' . PHP_EOL .
-			'<output>' . PHP_EOL .
-			'</output>' . PHP_EOL .
-
-			'[INFO] Downloading link for "1.0.0" => "1.0.1"...' . PHP_EOL .
-			'[INFO] Saving the downloaded update binary...' . PHP_EOL .
-			'[INFO] Applying update...' . __DIR__ . '/testdata/factorio_doesupdate/bin/x64/factorio --apply-update ' . __DIR__ . '/testdata/factorio_doesupdate/upd_1.0.0_1.0.1.zip' . PHP_EOL
+			'[INFO] Applying update "Version: 1.0.1 (build 1, linux64, headless)' . PHP_EOL .
+			'Version: 64' . PHP_EOL .
+			'Map input version: 1.0.0-0' . PHP_EOL .
+			'Map output version: 1.0.0-0"...' . PHP_EOL
 		);
 
-		$this->assertTrue($this->fu->applyUpdateSequence([], $tempfiles, '/some/madeup/non.sense'));
-		$this->assertFalse($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles, __DIR__ . '/testdata/update_link_not-array_%1$s_%2$s_%3$s_%4$s_%5$s.json'));
-		$this->assertFalse($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles, __DIR__ . '/testdata/update_link_empty-array_%1$s_%2$s_%3$s_%4$s_%5$s.json'));
-		$this->assertFalse($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles, __DIR__ . '/testdata/update_link_first-item-nonstring_%1$s_%2$s_%3$s_%4$s_%5$s.json'));
-		$this->assertFalse($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles, __DIR__ . '/testdata/update_link_first-item-bad-prefix_%1$s_%2$s_%3$s_%4$s_%5$s.json', $downdir . '/src/../tests/testdata/factorio_nope'));
-		$old_handler = set_error_handler(function (int $errno, string $errstr) {
-			return ($errno === E_WARNING && $errstr === ('file_get_contents(' . __DIR__ . '/tests/testdata/factorio_nope/hello.world): Failed to open stream: No such file or directory' . "\r\n"));
-		});
-		try {
-			$this->assertFalse($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles, __DIR__ . '/testdata/update_link_bad-link_%1$s_%2$s_%3$s_%4$s_%5$s.json', $downdir . '/src/../tests/testdata/factorio_nope'));
-		} finally {
-			set_error_handler($old_handler);
-		}
-		$this->assertFalse($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles, __DIR__ . '/testdata/update_link_ok_%1$s_%2$s_%3$s_%4$s_%5$s.json', $downdir . '/src/../tests/testdata/'));
-		$this->fu->opt_rootdir = __DIR__ . '/testdata/factorio_doesupdate/';
-		$this->assertTrue($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles, __DIR__ . '/testdata/update_link_ok_%1$s_%2$s_%3$s_%4$s_%5$s.json', $downdir . '/src/../tests/testdata/'));
-		$this->assertSame([__DIR__ . '/testdata/factorio_cantupdate/upd_1.0.0_1.0.1.zip', __DIR__ . '/testdata/factorio_doesupdate/upd_1.0.0_1.0.1.zip'], $tempfiles);
+		$this->assertTrue($this->fu->applyUpdateSequence([], $tempfiles, 'string:'));
+		$this->assertFalse($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles, 'string:'));
+		$this->assertFalse($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles, 'string:false'));
+		$this->assertFalse($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles, 'string:[]'));
+		$this->assertFalse($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles, 'string:[false]'));
+		$this->assertTrue($this->fu->applyUpdateSequence([['from' => '1.0.0', 'to' => '1.0.1']], $tempfiles));
+		$this->assertSame([], $tempfiles);
 	}
 }
