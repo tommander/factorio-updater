@@ -1,0 +1,790 @@
+<?xml version="1.0"?>
+<project name="Documentation">
+                <file path="src/FactorioUpdater.php" hash="4c91124a4bc19f37bbfadfac8721643e">
+            <docblock line="0">
+    <description>Factorio Updater. A PHP script for automated upgrade of headless Factorio installations.</description>
+    <long-description></long-description>
+                    <tag
+                name="copyright"
+                description="(c) 2024-2025 Tomáš &quot;Tommander&quot; Rajnoha."
+                                                                                                />
+                            <tag
+                name="license"
+                description="MIT"
+                                                                                                />
+                            <tag
+                name="see"
+                description=""
+                                                 link="https://github.com/tommander/factorio-updater"                                                />
+                            <tag
+                name="package"
+                description="Application"
+                                                                                                />
+            </docblock>
+
+
+            
+                            <namespace-alias name="\TMD\FactorioUpdater"/>
+            
+
+            
+                        
+                        
+                                        <class final="false" abstract="false" namespace="\TMD\FactorioUpdater" line="20">
+                    <name>FactorioUpdater</name>
+                    <full_name>\TMD\FactorioUpdater\FactorioUpdater</full_name>
+                    <docblock line="20">
+    <description>This is the only class of the Factorio Updater codebase.</description>
+    <long-description>The one and only entrypoint is the method &quot;run&quot;. All other methods, properties or constants are meant to be used only from within the class. Everything is exposed just for the purpose of unit testing.</long-description>
+                    <tag
+                name="package"
+                description="Application"
+                                                                                                />
+                        </docblock>
+
+                    
+                    
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="27" visibility="public">
+    <name>URL_LATEST</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::URL_LATEST</full_name>
+    <value>&#039;https://factorio.com/api/latest-releases&#039;</value>
+        <docblock line="27">
+    <description>Link to the list of latest Factorio releases.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="33" visibility="public">
+    <name>URL_LATEST_TEST</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::URL_LATEST_TEST</full_name>
+    <value>&#039;string:{&quot;experimental&quot;:{&quot;alpha&quot;:&quot;1.1.1&quot;,&quot;demo&quot;:&quot;1.1.1&quot;,&quot;expansion&quot;:&quot;1.1.1&quot;,&quot;headless&quot;:&quot;1.1.1&quot;},&quot;stable&quot;:{&quot;alpha&quot;:&quot;1.1.0&quot;,&quot;demo&quot;:&quot;1.1.0&quot;,&quot;expansion&quot;:&quot;1.1.0&quot;,&quot;headless&quot;:&quot;1.1.0&quot;}}&#039;</value>
+        <docblock line="33">
+    <description>Mock of URL_LATEST for unit testing.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="39" visibility="public">
+    <name>URL_AVAILABLE</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::URL_AVAILABLE</full_name>
+    <value>&#039;https://updater.factorio.com/get-available-versions&#039;</value>
+        <docblock line="39">
+    <description>Link to the list of atomic upgrades of Factorio.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="45" visibility="public">
+    <name>URL_AVAILABLE_TEST</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::URL_AVAILABLE_TEST</full_name>
+    <value>&#039;string:{&quot;core-linux_headless64&quot;:[{&quot;from&quot;:&quot;1.0.0&quot;,&quot;to&quot;:&quot;1.0.1&quot;},{&quot;from&quot;:&quot;1.0.1&quot;,&quot;to&quot;:&quot;1.1.0&quot;},{&quot;from&quot;:&quot;1.1.0&quot;,&quot;to&quot;:&quot;1.1.1&quot;},{&quot;stable&quot;:&quot;1.1.0&quot;}]}&#039;</value>
+        <docblock line="45">
+    <description>Mock of URL_AVAILABLE for unit testing.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="51" visibility="public">
+    <name>URL_UPDATE</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::URL_UPDATE</full_name>
+    <value>&#039;https://updater.factorio.com/get-download-link?username=%1$s&amp;token=%2$s&amp;package=%3$s&amp;from=%4$s&amp;to=%5$s&#039;</value>
+        <docblock line="51">
+    <description>Template link to the actual upgrade package link.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="57" visibility="public">
+    <name>URL_UPDATE_TEST</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::URL_UPDATE_TEST</full_name>
+    <value>&quot;string:[\&quot;Version: %5\$s (build 1, linux64, headless)\\nVersion: 64\\nMap input version: 1.0.0-0\\nMap output version: 1.0.0-0\&quot;]&quot;</value>
+        <docblock line="57">
+    <description>Mock of URL_UPDATE for unit testing.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="63" visibility="public">
+    <name>URL_DOWNLOAD_PREFIX</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::URL_DOWNLOAD_PREFIX</full_name>
+    <value>&#039;https://dl.factorio.com/&#039;</value>
+        <docblock line="63">
+    <description>An upgrade package link must start with this string.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="69" visibility="public">
+    <name>FMT_VERSION</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::FMT_VERSION</full_name>
+    <value>&#039;/^\d+\.\d+\.\d+$/&#039;</value>
+        <docblock line="69">
+    <description>Regex for verifying Factorio version strings.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="75" visibility="public">
+    <name>FMT_USERNAME</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::FMT_USERNAME</full_name>
+    <value>&#039;/^[A-Za-z0-9_-]+$/&#039;</value>
+        <docblock line="75">
+    <description>Regex for verifying Factorio usernames.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="81" visibility="public">
+    <name>FMT_TOKEN</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::FMT_TOKEN</full_name>
+    <value>&#039;/^[0-9a-f]{30}$/&#039;</value>
+        <docblock line="81">
+    <description>Regex for verifying Factorio tokens.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="87" visibility="public">
+    <name>OPT_PACKAGE</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::OPT_PACKAGE</full_name>
+    <value>&#039;core-linux_headless64&#039;</value>
+        <docblock line="87">
+    <description>Package name for atomic upgrades.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="94" visibility="public">
+    <name>OPT_BUILD</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::OPT_BUILD</full_name>
+    <value>&#039;headless&#039;</value>
+        <docblock line="94">
+    <description>Build name for Factorio.</description>
+    <long-description>This allows the script to verify that the Factorio installation is not e.g. a normal installation which can be upgraded easily via GUI.</long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="101" visibility="public">
+    <name>OPT_DISTRO</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::OPT_DISTRO</full_name>
+    <value>&#039;linux64&#039;</value>
+        <docblock line="101">
+    <description>Target system for Factorio.</description>
+    <long-description>This is a secondary way to ensure a correct Factorio installation has been chosen; other systems do not support the headless build.</long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string"/>
+                                    </docblock>
+
+</constant>
+
+                                            <constant namespace="\TMD\FactorioUpdater\FactorioUpdater" line="106" visibility="public">
+    <name>ARR_STABLE</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::ARR_STABLE</full_name>
+    <value>[&#039;stable&#039;, &#039;experimental&#039;]</value>
+        <docblock line="106">
+    <description>A list of allowed stability flags.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="non-empty-string[]"/>
+                                    </docblock>
+
+</constant>
+
+                                        
+                                            <property namespace="\TMD\FactorioUpdater\FactorioUpdater" line="113" visibility="public">
+    <name>opt_stable</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::$opt_stable</full_name>
+    <default>&#039;stable&#039;</default>
+        <docblock line="113">
+    <description>Current stability flag.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="string"/>
+                        </docblock>
+
+</property>
+
+                                            <property namespace="\TMD\FactorioUpdater\FactorioUpdater" line="121" visibility="public">
+    <name>opt_rootdir</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::$opt_rootdir</full_name>
+    <default>&#039;&#039;</default>
+        <docblock line="121">
+    <description>Path to the Factorio installation root directory.</description>
+    <long-description>This is the directory that contains `bin/x64/factorio`.</long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="string"/>
+                        </docblock>
+
+</property>
+
+                                            <property namespace="\TMD\FactorioUpdater\FactorioUpdater" line="127" visibility="public">
+    <name>opt_quiet</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::$opt_quiet</full_name>
+    <default>false</default>
+        <docblock line="127">
+    <description>Whether echoing to STDOUT should be silenced (`true`) or not (`false`).</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="bool"/>
+                        </docblock>
+
+</property>
+
+                                            <property namespace="\TMD\FactorioUpdater\FactorioUpdater" line="133" visibility="public">
+    <name>opt_test</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::$opt_test</full_name>
+    <default>false</default>
+        <docblock line="133">
+    <description>Indicates self-test.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="bool"/>
+                        </docblock>
+
+</property>
+
+                                            <property namespace="\TMD\FactorioUpdater\FactorioUpdater" line="139" visibility="public">
+    <name>opt_noinstall</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::$opt_noinstall</full_name>
+    <default>false</default>
+        <docblock line="139">
+    <description>If a new version of Factorio is available, should the script download it and install it (`false`) or not (`true`).</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="bool"/>
+                        </docblock>
+
+</property>
+
+                                            <property namespace="\TMD\FactorioUpdater\FactorioUpdater" line="145" visibility="public">
+    <name>factorio_exec_mock</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::$factorio_exec_mock</full_name>
+    <default>&#039;&#039;</default>
+        <docblock line="145">
+    <description>This is used for unit testing to mimick the Factorio executable&#039;s output when called with &quot;--version&quot;.</description>
+    <long-description></long-description>
+                    <tag
+                name="var"
+                description=""
+                                                                                                 type="string"/>
+                        </docblock>
+
+</property>
+
+                                        
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="154" visibility="public" returnByReference="false">
+    <name>error</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::error()</full_name>
+    <value></value>
+                <argument line="154" by_reference="false">
+    <name>message</name>
+    <default></default>
+    <type>string</type>
+</argument>
+
+        <docblock line="154">
+    <description>Echo an error message to STDOUT.</description>
+    <long-description></long-description>
+                    <tag
+                name="param"
+                description="Error message."
+                                                                 variable="message"                                 type="string"/>
+                            <tag
+                name="return"
+                description=""
+                                                                                                 type="void"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="169" visibility="public" returnByReference="false">
+    <name>info</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::info()</full_name>
+    <value></value>
+                <argument line="169" by_reference="false">
+    <name>message</name>
+    <default></default>
+    <type>string</type>
+</argument>
+
+        <docblock line="169">
+    <description>Echo an info message to STDOUT.</description>
+    <long-description></long-description>
+                    <tag
+                name="param"
+                description="Info message."
+                                                                 variable="message"                                 type="string"/>
+                            <tag
+                name="return"
+                description=""
+                                                                                                 type="void"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="184" visibility="public" returnByReference="false">
+    <name>loadOptions</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::loadOptions()</full_name>
+    <value></value>
+                <argument line="184" by_reference="false">
+    <name>custom_opts</name>
+    <default>null</default>
+    <type>array|null</type>
+</argument>
+
+        <docblock line="184">
+    <description>Load command-line options given to the script, if any, and validate them.</description>
+    <long-description></long-description>
+                    <tag
+                name="param"
+                description="If not null, it overrides command-line options (used in unit tests)."
+                                                                 variable="custom_opts"                                 type="array|null"/>
+                            <tag
+                name="return"
+                description="Success or not."
+                                                                                                 type="bool"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="237" visibility="public" returnByReference="false">
+    <name>factorioExec</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::factorioExec()</full_name>
+    <value></value>
+            <docblock line="237">
+    <description>Return the path to Factorio executable file within the given Factorio root
+folder.</description>
+    <long-description></long-description>
+                    <tag
+                name="return"
+                description="Absolute path to the Factorio executable."
+                                                                                                 type="string"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="247" visibility="public" returnByReference="false">
+    <name>runFactorioVersion</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::runFactorioVersion()</full_name>
+    <value></value>
+            <docblock line="247">
+    <description>Execute Factorio with the &quot;--version&quot; option. In case of self-test, return the &quot;factorio_exec_mock&quot; property.</description>
+    <long-description></long-description>
+                    <tag
+                name="return"
+                description="Standard output of the call or false in case of an error."
+                                                                                                 type="string|false"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="270" visibility="public" returnByReference="false">
+    <name>runFactorioApplyUpdate</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::runFactorioApplyUpdate()</full_name>
+    <value></value>
+                <argument line="270" by_reference="false">
+    <name>update_file</name>
+    <default></default>
+    <type>string</type>
+</argument>
+
+            <argument line="270" by_reference="true">
+    <name>update_out</name>
+    <default></default>
+    <type>string</type>
+</argument>
+
+        <docblock line="270">
+    <description>Execute Factorio with the &quot;--apply-update PATH&quot; option. In case of a self-test, write to &quot;factorio_exec_mock&quot; property.</description>
+    <long-description></long-description>
+                    <tag
+                name="param"
+                description="Path to the atomic upgrade package, or the new content of &quot;factorio_exec_mock&quot; property for testing purposes."
+                                                                 variable="update_file"                                 type="string"/>
+                <tag
+                name="param"
+                description="Full content of STDOUT of the call (unused in case of a self-test)."
+                                                                 variable="update_out"                                 type="string"/>
+                            <tag
+                name="return"
+                description="Exit code of the program or 0 in case of a self-test."
+                                                                                                 type="int"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="292" visibility="public" returnByReference="false">
+    <name>validateString</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::validateString()</full_name>
+    <value></value>
+                <argument line="292" by_reference="false">
+    <name>something</name>
+    <default></default>
+    <type>mixed</type>
+</argument>
+
+            <argument line="292" by_reference="false">
+    <name>regex</name>
+    <default></default>
+    <type>non-empty-string</type>
+</argument>
+
+        <docblock line="292">
+    <description>Verify that the given *something* is a string with correct format based
+on the given regex.</description>
+    <long-description></long-description>
+                    <tag
+                name="param"
+                description="This will be verified."
+                                                                 variable="something"                                 type="mixed"/>
+                <tag
+                name="param"
+                description="Expected format."
+                                                                 variable="regex"                                 type="non-empty-string"/>
+                            <tag
+                name="return"
+                description="The string if it&#039;s correct, false otherwise."
+                                                                                                 type="string|false"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="315" visibility="public" returnByReference="false">
+    <name>validateRootdir</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::validateRootdir()</full_name>
+    <value></value>
+            <docblock line="315">
+    <description>Verify that the path to root directory of Factorio installation is
+correct.</description>
+    <long-description>- The root directory must exist and be a directory readable+writable by the current user.
+- The path must end with a directory separator.
+- The directory must contain an executable &quot;factorio&quot; file on the path &quot;bin/x64/factorio&quot;.</long-description>
+                    <tag
+                name="return"
+                description="Valid or not."
+                                                                                                 type="bool"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="358" visibility="public" returnByReference="false">
+    <name>checkParams</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::checkParams()</full_name>
+    <value></value>
+            <docblock line="358">
+    <description>Check that the environment variables FACTORIO_USERNAME and FACTORIO_TOKEN contain expected values.</description>
+    <long-description></long-description>
+                    <tag
+                name="return"
+                description="True if both variables are correct, false otherwise."
+                                                                                                 type="bool"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="391" visibility="public" returnByReference="false">
+    <name>downloadJson</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::downloadJson()</full_name>
+    <value></value>
+                <argument line="391" by_reference="false">
+    <name>url</name>
+    <default></default>
+    <type>string</type>
+</argument>
+
+            <argument line="391" by_reference="false">
+    <name>secret</name>
+    <default>false</default>
+    <type>bool</type>
+</argument>
+
+        <docblock line="391">
+    <description>Download the JSON from URL, parse it and return it as an associative array.</description>
+    <long-description>Beware that the function may return null not because of failure, but because
+that is the content of the downloaded JSON.
+
+If the URL starts with &quot;string:&quot;, treat the rest of the &quot;URL&quot; as a raw JSON. In that case, nothing needs to be downloaded and that raw JSON is parsed, checked and returned.</long-description>
+                    <tag
+                name="param"
+                description="URL of the string (or anything acceptable to fopen)."
+                                                                 variable="url"                                 type="string"/>
+                            <tag
+                name="return"
+                description="Decoded JSON on success, false on failure."
+                                                                                                 type="array|false"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="422" visibility="public" returnByReference="false">
+    <name>getLatestRelease</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::getLatestRelease()</full_name>
+    <value></value>
+                <argument line="422" by_reference="false">
+    <name>custom_url</name>
+    <default>null</default>
+    <type>?string</type>
+</argument>
+
+        <docblock line="422">
+    <description>Get the latest remote Factorio headless version.</description>
+    <long-description>Download the releases list from Factorio API and find the correct
+stable/experimental build of the headless version.</long-description>
+                    <tag
+                name="return"
+                description="Latest release version string on success, false otherwise."
+                                                                                                 type="string|false"/>
+                                    </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="453" visibility="public" returnByReference="false">
+    <name>getLocalVersion</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::getLocalVersion()</full_name>
+    <value></value>
+            <docblock line="453">
+    <description>Get the current local Factorio version.</description>
+    <long-description>Run factorio with &quot;--version&quot; and extract and return its version.</long-description>
+                    <tag
+                name="return"
+                description="Local version info on success, false otherwise."
+                                                                                                 type="array{version: string|false, buildno: string, distro: string, build: string}|false"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="499" visibility="public" returnByReference="false">
+    <name>getUpdateSequence</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::getUpdateSequence()</full_name>
+    <value></value>
+                <argument line="499" by_reference="false">
+    <name>from_version</name>
+    <default></default>
+    <type>string</type>
+</argument>
+
+            <argument line="499" by_reference="false">
+    <name>to_version</name>
+    <default></default>
+    <type>string</type>
+</argument>
+
+            <argument line="499" by_reference="false">
+    <name>custom_url</name>
+    <default>null</default>
+    <type>?string</type>
+</argument>
+
+        <docblock line="499">
+    <description>Find a sequence of atomic upgrade packages to update from the &quot;from&quot; version
+to the &quot;to&quot; version.</description>
+    <long-description>It fails if it doesn&#039;t find a path that starts exactly with &quot;from&quot; and ends
+exactly with &quot;to&quot; (e.g. when there is just a partial update available, e.g.
+&quot;from&quot; is &quot;1.1.1&quot;, &quot;to&quot; is &quot;1.1.3&quot; and the available sequence is
+`[1.1.1-&gt;1.1.2, 1.1.2-&gt;1.1.3]`).
+
+This information is necessary to find and download the atomic upgrades as the
+next step.</long-description>
+                    <tag
+                name="param"
+                description="From version (local)."
+                                                                 variable="from_version"                                 type="string"/>
+                <tag
+                name="param"
+                description="To version (remote)."
+                                                                 variable="to_version"                                 type="string"/>
+                            <tag
+                name="return"
+                description="Array of from-to combinations on&#10;success, false otherwise."
+                                                                                                 type="list&lt;array{from: string, to: string}&gt;|false"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="564" visibility="public" returnByReference="false">
+    <name>applyUpdateSequence</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::applyUpdateSequence()</full_name>
+    <value></value>
+                <argument line="564" by_reference="false">
+    <name>sequence</name>
+    <default></default>
+    <type>list&lt;array{from: string, to: string}&gt;</type>
+</argument>
+
+            <argument line="564" by_reference="true">
+    <name>tempFiles</name>
+    <default></default>
+    <type>list&lt;string&gt;</type>
+</argument>
+
+            <argument line="564" by_reference="false">
+    <name>custom_url</name>
+    <default>null</default>
+    <type>?string</type>
+</argument>
+
+        <docblock line="564">
+    <description>Download and apply (install) each atomic upgrade package from the sequence.</description>
+    <long-description></long-description>
+                    <tag
+                name="param"
+                description="Sequence of atomic upgrades."
+                                                                 variable="sequence"                                 type="list&lt;array{from: string, to: string}&gt;"/>
+                <tag
+                name="param"
+                description="List of paths to temporary files created during the run of the method."
+                                                                 variable="tempFiles"                                 type="list&lt;string&gt;"/>
+                            <tag
+                name="return"
+                description="True if all packages have been successfully downloaded and applied, false otherwise."
+                                                                                                 type="bool"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="626" visibility="public" returnByReference="false">
+    <name>runReal</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::runReal()</full_name>
+    <value></value>
+            <docblock line="626">
+    <description>Determine the local and remote Factorio version, compare them and, if requested, download and apply all atomic upgrades so that the local Factorio is up-to-date.</description>
+    <long-description></long-description>
+                    <tag
+                name="return"
+                description="0 on success, 1 otherwise."
+                                                                                                 type="int"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="713" visibility="public" returnByReference="false">
+    <name>runTest</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::runTest()</full_name>
+    <value></value>
+            <docblock line="713">
+    <description>Perform an in-memory-only self-test using all available stability flags.</description>
+    <long-description></long-description>
+                    <tag
+                name="return"
+                description="0 on success, 1 otherwise."
+                                                                                                 type="int"/>
+                        </docblock>
+
+</method>
+
+                                            <method final="false" abstract="false" static="false" namespace="\TMD\FactorioUpdater" line="739" visibility="public" returnByReference="false">
+    <name>run</name>
+    <full_name>\TMD\FactorioUpdater\FactorioUpdater::run()</full_name>
+    <value></value>
+            <docblock line="739">
+    <description>Run the script - load and verify command-line options, ensure that environment variables are correct and run either normal operation or self-test.</description>
+    <long-description>This is the only method that should be called outside of its class (with the exception of unit tests).</long-description>
+                    <tag
+                name="return"
+                description="0 on success, 1 otherwise."
+                                                                                                 type="int"/>
+                            <tag
+                name="psalm-suppress"
+                description="PossiblyUnusedMethod"
+                                                                                                />
+                        </docblock>
+
+</method>
+
+                                                                            </class>
+            
+                        
+            
+            <parse_markers></parse_markers>
+        </file>
+    
+            <namespace name="FactorioUpdater" full_name="\TMD\FactorioUpdater" />
+
+            <namespace name="\" full_name="\">
+            <namespace name="TMD" full_name="\TMD">
+            <namespace name="FactorioUpdater" full_name="\TMD\FactorioUpdater" />
+
+    </namespace>
+
+    </namespace>
+
+            <namespace name="TMD" full_name="\TMD">
+            <namespace name="FactorioUpdater" full_name="\TMD\FactorioUpdater" />
+
+    </namespace>
+
+    </project>

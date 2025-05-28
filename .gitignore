@@ -2,3 +2,5 @@ vendor/
 .phpunit.result.cache
 codecov/*.xml
 codecov/src
+phpDocumentor.phar
+.phpdoc
