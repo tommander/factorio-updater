@@ -4,3 +4,4 @@ codecov/*.xml
 codecov/src
 phpDocumentor.phar
 .phpdoc
+composer.lock
