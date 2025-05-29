@@ -5,3 +5,6 @@ codecov/src
 phpDocumentor.phar
 .phpdoc
 composer.lock
+docs/build
+docs/source/api/*.rst
+phpdoc/structure.xml

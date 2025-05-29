@@ -1,6 +1,6 @@
 # Factorio Updater
 
-[![PHP QA](https://github.com/tommander/factorio-updater/actions/workflows/php.yml/badge.svg)](https://github.com/tommander/factorio-updater/actions/workflows/php.yml)
+[![PHP QA](https://github.com/tommander/factorio-updater/actions/workflows/php.yml/badge.svg)](https://github.com/tommander/factorio-updater/actions/workflows/php.yml) [![pages-build-deployment](https://github.com/tommander/factorio-updater/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/tommander/factorio-updater/actions/workflows/pages/pages-build-deployment)
 
 A simple PHP script that checks the local Factorio version and compares it with the latest online version. If a newer version is available, it automatically updates Factorio to that version, applying all atomic updates one by one.
 
@@ -58,11 +58,13 @@ For the "normal" operation mode, you must use the "-r, --rootdir" option to let 
 
 ## Documentation
 
-GitHub Pages.
+See [GitHub Pages](https://tommander.github.io/factorio-updater/).
 
 ## Contributing
 
 Thank you for considering contributing to this small project!
+
+You will find some basic info below, the rest can be found on [GitHub Pages](https://tommander.github.io/factorio-updater/).
 
 ### Bugs, Issues, Feature Requests
 
