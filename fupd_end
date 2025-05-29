@@ -1,2 +1,0 @@
-
-exit((new \TMD\FactorioUpdater\FactorioUpdaterScript())->run());
