@@ -43,7 +43,7 @@ class FactorioUpdaterScript
 	 *
 	 * @var non-empty-string
 	 */
-	public const URL_AVAILABLE_TEST = 'string:{"core-linux_headless64":[{"from":"1.0.0","to":"1.0.1"},{"from":"1.0.1","to":"1.1.0"},{"from":"1.1.0","to":"1.1.1"},{"stable":"1.1.0"}]}';
+	public const URL_AVAILABLE_TEST = 'string:{"core-linux_headless64":[{"from":"1.0.0","to":"1.0.1"},{"from":"1.0.1","to":"1.1.0"},{"from":"1.0.1","to":"1.1.1"},{"from":"1.1.0","to":"1.1.1"},{"stable":"1.1.0"}]}';
 	/**
 	 * Template link to the actual upgrade package link.
 	 *
@@ -480,6 +480,40 @@ class FactorioUpdaterScript
 	}
 
 	/**
+	 * Converts a semver string to a three-value array of integers
+	 *
+	 * @return array{int,int,int}
+	 */
+	public function semverToArray(string $ver): array
+	{
+		if (preg_match('/^(\d+)\.(\d+)\.(\d+)$/', $ver, $verMatches) !== 1 || count($verMatches) !== 4 || !is_numeric($verMatches[1]) || !is_numeric($verMatches[2]) || !is_numeric($verMatches[3])) {
+			return [0,0,0];
+		}
+
+		return [(int) $verMatches[1],(int) $verMatches[2],(int) $verMatches[3]];
+	}
+
+	/**
+	 * Compares two semver strings
+	 */
+	public function compareSemver(string $verA, string $verB): int
+	{
+		$arrA = $this->semverToArray($verA);
+		$arrB = $this->semverToArray($verB);
+
+		$maj = ($arrA[0] <=> $arrB[0]);
+		if ($maj !== 0) {
+			return $maj;
+		}
+		$min = ($arrA[1] <=> $arrB[1]);
+		if ($min !== 0) {
+			return $min;
+		}
+		$patch = ($arrA[2] <=> $arrB[2]);
+		return $patch;
+	}
+
+	/**
 	 * Find a sequence of atomic upgrade packages to update from the "from" version
 	 * to the "to" version.
 	 *
@@ -514,36 +548,50 @@ class FactorioUpdaterScript
 			return false;
 		}
 
+		/**
+		 * @var array<string, list<string>>
+		 */
+		$list_available = [];
+		foreach ($json_available[static::OPT_PACKAGE] as $fromto) {
+			if (!is_array($fromto) || isset($fromto['stable'])) {
+				continue;
+			}
+			$from = $this->validateString($fromto['from'] ?? null, static::FMT_VERSION);
+			$to = $this->validateString($fromto['to'] ?? null, static::FMT_VERSION);
+			if (!is_string($from) || !is_string($to)) {
+				continue;
+			}
+
+			if (!isset($list_available[$from])) {
+				$list_available[$from] = [];
+			}
+
+			$list_available[$from][] = $to;
+		}
+
 		$current_from = $from_version;
-		$empty_through = false;
 		$success = false;
 		$sequence = [];
-		while (!$empty_through) {
-			$empty_through = true;
-			/**
-			 * It's an array.
-			 *
-			 * @var array
-			 */
-			foreach ($json_available[static::OPT_PACKAGE] as $fromto) {
-				$from = $this->validateString($fromto['from'] ?? null, static::FMT_VERSION);
-				$to = $this->validateString($fromto['to'] ?? null, static::FMT_VERSION);
-				if (!is_string($from) || !is_string($to)) {
-					continue;
-				}
-				if ($from !== $current_from) {
-					continue;
-				}
-				$empty_through = false;
-				$sequence[] = ['from' => $from, 'to' => $to];
-				if ($to === $to_version) {
-					$empty_through = true;
-					$success = true;
-					break;
-				}
-				$current_from = $to;
+		while (true) {
+			if (!isset($list_available[$current_from])) {
 				break;
 			}
+			$final_to = $list_available[$current_from][0];
+			foreach ($list_available[$current_from] as $candidate_to) {
+				if ($candidate_to === $to_version) {
+					$final_to = $candidate_to;
+					break;
+				}
+				if ($this->compareSemver($final_to, $candidate_to) < 0) {
+					$final_to = $candidate_to;
+				}
+			}
+			$sequence[] = ['from' => $current_from, 'to' => $final_to];
+			if ($final_to === $to_version) {
+				$success = true;
+				break;
+			}
+			$current_from = $final_to;
 		}
 
 		if (!$success) {
