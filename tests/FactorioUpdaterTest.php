@@ -545,11 +545,7 @@ class FactorioUpdaterTest extends TestCase
 			'[ERROR] false is not an array.' . PHP_EOL .
 			'[ERROR] {"a":"b"} does not contain the key "core-linux_headless64".' . PHP_EOL .
 			'[ERROR] {"core-linux_headless64":"yes"} key "core-linux_headless64" is not an array.' . PHP_EOL .
-			'[ERROR] null is not a string.' . PHP_EOL .
-			'[ERROR] null is not a string.' . PHP_EOL .
 			'[ERROR] {"core-linux_headless64":[{"from":"1.0.0","to":"1.0.1"},{"from":"1.0.1","to":"1.1.0"},{"from":"1.0.1","to":"1.1.1"},{"from":"1.1.0","to":"1.1.1"},{"stable":"1.1.0"}]} key "core-linux_headless64" does not contain a sequence of updates from "1.0.0" to "1.2.0".' . PHP_EOL .
-			'[ERROR] null is not a string.' . PHP_EOL .
-			'[ERROR] null is not a string.' . PHP_EOL .
 			'[ERROR] {"core-linux_headless64":[{"from":"1.0.0","to":"1.0.1"},{"from":"1.0.1","to":"1.1.0"},{"from":"1.0.1","to":"1.1.1"},{"from":"1.1.0","to":"1.1.1"},{"stable":"1.1.0"}]} key "core-linux_headless64" does not contain a sequence of updates from "0.1.0" to "1.1.1".' . PHP_EOL
 		);
 		$this->assertFalse($this->fu->getUpdateSequence('', '', 'string:true'));
@@ -558,6 +554,7 @@ class FactorioUpdaterTest extends TestCase
 		$this->assertFalse($this->fu->getUpdateSequence('1.0.0', '1.2.0'));
 		$this->assertFalse($this->fu->getUpdateSequence('0.1.0', '1.1.1'));
 		$this->assertSame([['from' => '1.0.0', 'to' => '1.0.1']], $this->fu->getUpdateSequence('1.0.0', '1.0.1'));
+		$this->assertSame([['from' => '1.0.0', 'to' => '1.0.1'], ['from' => '1.0.1', 'to' => '1.1.0']], $this->fu->getUpdateSequence('1.0.0', '1.1.0'));
 		$this->assertSame([['from' => '1.0.0', 'to' => '1.0.1'], ['from' => '1.0.1', 'to' => '1.1.1']], $this->fu->getUpdateSequence('1.0.0', '1.1.1'));
 	}
 
