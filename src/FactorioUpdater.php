@@ -42,7 +42,7 @@ class FactorioUpdater
 	 *
 	 * @var non-empty-string
 	 */
-	public const URL_AVAILABLE_TEST = 'string:{"core-linux_headless64":[{"from":"1.0.0","to":"1.0.1"},{"from":"1.0.1","to":"1.1.0"},{"from":"1.1.0","to":"1.1.1"},{"stable":"1.1.0"}]}';
+	public const URL_AVAILABLE_TEST = 'string:{"core-linux_headless64":[{"from":"1.0.0","to":"1.0.1"},{"from":"1.0.1","to":"1.1.0"},{"from":"1.0.1","to":"1.1.1"},{"from":"1.1.0","to":"1.1.1"},{"stable":"1.1.0"}]}';
 	/**
 	 * Template link to the actual upgrade package link.
 	 *
